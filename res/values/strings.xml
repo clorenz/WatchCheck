@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, WatchCheckActivity!</string>
+    <string name="app_name">WatchCheck</string>
+    <string name="timeOfYourWatch">Time of your watch</string>
+    <string name="OK">OK</string>
+</resources>
