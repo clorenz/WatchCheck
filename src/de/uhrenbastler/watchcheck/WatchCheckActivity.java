@@ -1,38 +1,61 @@
 package de.uhrenbastler.watchcheck;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 
 public class WatchCheckActivity extends Activity {
     
     private Button checkButton;
     private TimePicker watchtimePicker;
+    private double ntpDelta=0;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+  
         setContentView(R.layout.main);
+
+        Toast toast = Toast.makeText(WatchCheckActivity.this, "Trying to get NTP time...", Toast.LENGTH_SHORT);
+        toast.show();
         
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
         watchtimePicker.setIs24HourView(true);
         
-        this.checkButton = (Button) findViewById(R.id.buttonCheckTime);
+        checkButton = (Button) findViewById(R.id.buttonCheckTime);       
+        try {
+            ntpDelta = getNtpDelta();
+            checkButton.setText(R.string.buttonCheckTimeNtp);
+        } catch ( Exception e) {
+            Log.e("WatchCheck", e.getMessage());
+            checkButton.setText(R.string.buttonCheckTimeLocal);
+        }
         this.checkButton.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
                 GregorianCalendar referenceTime = new GregorianCalendar();
-                
+                referenceTime.add(Calendar.SECOND, -1 * (int) ntpDelta);
+               
                 Integer minute = watchtimePicker.getCurrentMinute();
                 Integer hour = watchtimePicker.getCurrentHour();
                 
@@ -50,5 +73,67 @@ public class WatchCheckActivity extends Activity {
             }
         });
         
+    }
+
+    protected double getNtpDelta() throws IOException {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if ( networkInfo!=null && networkInfo.isConnected()) {       
+            DatagramSocket socket = new DatagramSocket();
+            socket.setSoTimeout(2000);
+            InetAddress address = InetAddress.getByName("europe.pool.ntp.org");
+            byte[] buf = new NtpMessage().toByteArray();
+            DatagramPacket packet =
+                new DatagramPacket(buf, buf.length, address, 123);
+            
+            // Set the transmit timestamp *just* before sending the packet
+            // ToDo: Does this actually improve performance or not?
+            NtpMessage.encodeTimestamp(packet.getData(), 40,
+                (System.currentTimeMillis()/1000.0) + 2208988800.0);
+            
+            socket.send(packet);
+            
+            
+            // Get response
+            Log.i("WatchCheck","NTP request sent, waiting for response...\n");
+            packet = new DatagramPacket(buf, buf.length);
+            socket.receive(packet);
+            
+            // Immediately record the incoming timestamp
+            double destinationTimestamp =
+                (System.currentTimeMillis()/1000.0) + 2208988800.0;
+            
+            
+            // Process response
+            NtpMessage msg = new NtpMessage(packet.getData());
+            
+            // Corrected, according to RFC2030 errata
+            double roundTripDelay = (destinationTimestamp-msg.originateTimestamp) -
+                (msg.transmitTimestamp-msg.receiveTimestamp);
+                
+            double localClockOffset =
+                ((msg.receiveTimestamp - msg.originateTimestamp) +
+                (msg.transmitTimestamp - destinationTimestamp)) / 2;
+            
+            
+            // Display response
+            Log.i("WatchCheck",msg.toString());
+            
+            Log.i("WatchCheck","Dest. timestamp:     " +
+                NtpMessage.timestampToString(destinationTimestamp));
+            
+            Log.i("WatchCheck","Round-trip delay: " +
+                new DecimalFormat("0.00").format(roundTripDelay*1000) + " ms");
+            
+            Log.i("WatchCheck","Local clock offset: " +
+                new DecimalFormat("0.00").format(localClockOffset*1000) + " ms");
+            
+            socket.close();
+    
+            return localClockOffset;
+            
+        } else {
+            return 0;
+        }
     }
 }

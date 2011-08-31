@@ -3,4 +3,6 @@
     <string name="app_name">WatchCheck</string>
     <string name="timeOfYourWatch">Enter the time of your watch (seconds to zero)</string>
     <string name="OK">Measure</string>
+    <string name="buttonCheckTimeNtp">Measure (NTP precision)</string>
+    <string name="buttonCheckTimeLocal">Measure (local precision)</string>
 </resources>
