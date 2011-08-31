@@ -41,14 +41,21 @@ public class WatchCheckActivity extends Activity {
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
         watchtimePicker.setIs24HourView(true);
         
-        checkButton = (Button) findViewById(R.id.buttonCheckTime);       
+        TextView modeView = (TextView) findViewById(R.id.Mode);
+        
+               
         try {
             ntpDelta = getNtpDelta();
-            checkButton.setText(R.string.buttonCheckTimeNtp);
+            
+            String ntpMode = getResources().getString(R.string.modeNtp);
+            ntpMode = ntpMode.replaceFirst("\\%s", ""+ntpDelta);
+            modeView.setText(ntpMode);
         } catch ( Exception e) {
             Log.e("WatchCheck", e.getMessage());
-            checkButton.setText(R.string.buttonCheckTimeLocal);
+            modeView.setText(R.string.modeLocal);
         }
+        
+        checkButton = (Button) findViewById(R.id.buttonCheckTime);
         this.checkButton.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -69,6 +76,9 @@ public class WatchCheckActivity extends Activity {
                 
                 TextView deltaTime = (TextView) findViewById(R.id.deltaTime);
                 deltaTime.setText("Delta: "+(deltaSeconds>0?"+":deltaSeconds<0?"":"+-")+deltaSeconds+" sec");
+                
+                Button buttonLog = (Button) findViewById(R.id.buttonLog);
+                buttonLog.setClickable(true); buttonLog.setEnabled(true);
                 
             }
         });

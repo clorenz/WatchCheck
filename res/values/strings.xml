@@ -5,4 +5,8 @@
     <string name="OK">Measure</string>
     <string name="buttonCheckTimeNtp">Measure (NTP precision)</string>
     <string name="buttonCheckTimeLocal">Measure (local precision)</string>
+    <string name="mode">Measure mode: </string>
+    <string name="modeNtp">NTP (Deviation: %s sec)</string>
+    <string name="modeLocal">Local time (not precise!)</string>
+    <string name="buttnLog">Log</string>
 </resources>
