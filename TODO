@@ -1,0 +1,9 @@
+Logging:
+    - Uhr
+    - NTP-Delta
+    - Modus (NTP oder lokal)
+    - Abweichung ggf. lokal
+    - Position (6 Chronometerpos + normal getragen)
+    - Temperatur (bei Chronometerpos)
+    - Anmerkung
+    - Logging-Timestamp
