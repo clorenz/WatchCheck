@@ -8,10 +8,12 @@ import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
@@ -23,14 +25,15 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher;
     private static final int WATCHES = 1;
     private static final int LOGS = 2;
-    private DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+    private static final int DB_VERSION = 2;
+    private DatabaseHelper dbHelper;
     private static Map<String, String> watchesProjectionMap;
     private static Map<String, String> logsProjectionMap;
     
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(AUTHORITY, "watches", 1);
-        sUriMatcher.addURI(AUTHORITY, "logs", 2);
+        sUriMatcher.addURI(AUTHORITY, Watches.TABLE_NAME, 1);
+        sUriMatcher.addURI(AUTHORITY, Logs.TABLE_NAME, 2);
         
         watchesProjectionMap = new HashMap<String,String>();
         watchesProjectionMap.put(Watches.WATCH_ID, Watches.WATCH_ID);
@@ -50,6 +53,46 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         logsProjectionMap.put(Logs.COMMENT, Logs.COMMENT);
         
     }
+    
+    
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+        
+        DatabaseHelper(Context context) {
+            super(context, "watchcheck.db", null, DB_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            android.util.Log.d("WatchCheck","Creating databases");
+            
+            db.execSQL("CREATE TABLE " + Watches.TABLE_NAME+" (" +
+                    Watches.WATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    Watches.NAME + " VARCHAR(255), "+
+                    Watches.SERIAL + " VARCHAR(255), "+
+                    Watches.DATE_CREATE + " TIMESTAMP, "+
+                    Watches.COMMENT+" TEXT);");      
+            
+            db.execSQL("CREATE TABLE " + Logs.TABLE_NAME+" (" +
+                    Logs.LOG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    Logs.WATCH_ID + " INTEGER, "+
+                    Logs.MODUS + " VARCHAR(5), "+
+                    Logs.LOCAL_TIMESTAMP + " TIMESTAMP, "+
+                    Logs.NTP_DIFF + " DECIMAL(6,2), "+
+                    Logs.POSITION + " VARCHAR(2), "+
+                    Logs.TEMPERATURE + " INTEGER, "+
+                    Logs.COMMENT + " TEXT);");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            if ( oldVersion == 1 && newVersion == 2) {
+                db.execSQL("ALTER TABLE watch RENAME TO "+Watches.TABLE_NAME);
+                return;
+            }
+            throw new IllegalArgumentException("Upgrading the database from "+oldVersion+" to "+newVersion+" is not yet implemented!");
+        }
+    }
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -57,11 +100,11 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         int count;
         switch (sUriMatcher.match(uri)) {
             case WATCHES:
-                count = db.delete("watches", selection, selectionArgs);
+                count = db.delete(Watches.TABLE_NAME, selection, selectionArgs);
                 break;
 
             case LOGS:
-                count = db.delete("logs", selection, selectionArgs);
+                count = db.delete(Logs.TABLE_NAME, selection, selectionArgs);
                 break;
                 
             default:
@@ -114,7 +157,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
-        long rowId = db.insert("watches", Watches.NAME, values);
+        long rowId = db.insert(Watches.TABLE_NAME, Watches.NAME, values);
         
         if ( rowId > 0) {
             Uri watchUri = ContentUris.withAppendedId(Watches.CONTENT_URI, rowId);
@@ -136,7 +179,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
-        long rowId = db.insert("Logs", Logs.MODUS, values);
+        long rowId = db.insert(Logs.TABLE_NAME, Logs.MODUS, values);
         
         if ( rowId > 0) {
             Uri LogUri = ContentUris.withAppendedId(Logs.CONTENT_URI, rowId);
@@ -151,7 +194,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         dbHelper = new DatabaseHelper(getContext());
-        return true;
+        return (dbHelper != null);
     }
 
 
@@ -162,12 +205,12 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         
         switch (sUriMatcher.match(uri)) {
             case WATCHES:
-                qb.setTables("watches");
+                qb.setTables(Watches.TABLE_NAME);
                 qb.setProjectionMap(watchesProjectionMap);
                 break;
                 
             case LOGS:
-                qb.setTables("logs");
+                qb.setTables(Logs.TABLE_NAME);
                 qb.setProjectionMap(logsProjectionMap);
                 break;
                 

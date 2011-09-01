@@ -16,7 +16,7 @@
 	    android:layout_width="fill_parent" 
 	    android:text="@string/timeOfYourWatch" android:layout_marginTop="30dp" android:layout_height="wrap_content"/>
 	<TimePicker android:id="@+id/TimePicker1" android:layout_height="wrap_content" android:layout_width="match_parent"></TimePicker>
-	<Button android:layout_height="wrap_content" android:text="@string/OK" android:id="@+id/buttonCheckTime" android:layout_width="match_parent"></Button>
+	<Button android:layout_height="wrap_content" android:id="@+id/buttonCheckTime" android:layout_width="match_parent" android:text="@string/measure"></Button>
 	<EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:id="@+id/deltaTime">
 	    <requestFocus></requestFocus>
 	</EditText>

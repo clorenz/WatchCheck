@@ -17,6 +17,7 @@
         </activity>
         
         <provider android:name="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider"  android:authorities="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider"/>
+        <activity android:name="LogActivity"></activity>
 
     </application>
 </manifest>

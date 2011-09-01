@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 public class WatchCheckActivity extends Activity {
     
     private Button checkButton;
+    private Button logButton;
     private TimePicker watchtimePicker;
     private double ntpDelta=0;
     
@@ -81,6 +83,18 @@ public class WatchCheckActivity extends Activity {
                 buttonLog.setClickable(true); buttonLog.setEnabled(true);
                 
             }
+        });
+        
+        
+        logButton = (Button) findViewById(R.id.buttonLog);
+        logButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
+                startActivity(logIntent);
+            }
+            
         });
         
     }

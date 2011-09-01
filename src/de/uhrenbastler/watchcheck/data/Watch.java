@@ -12,6 +12,8 @@ public class Watch {
         
         private Watches() {}
         
+        public static final String TABLE_NAME="watches";
+        
         public static final Uri CONTENT_URI = Uri.parse("content://"+WatchCheckLogContentProvider.AUTHORITY+"/watches");
         
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.watchcheck.watches";

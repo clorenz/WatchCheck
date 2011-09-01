@@ -12,6 +12,8 @@ public class Log {
         
         private Logs() {}
         
+        public static final String TABLE_NAME="logs";
+        
         public static final Uri CONTENT_URI = Uri.parse("content://"+WatchCheckLogContentProvider.AUTHORITY+"/logs");
         
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.watchcheck.logs";
