@@ -1,6 +1,8 @@
 package de.uhrenbastler.watchcheck;
 
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,10 +10,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 
 public class LogActivity extends Activity {
+	
+	List<String> watches = new ArrayList<String>();
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,11 @@ public class LogActivity extends Activity {
                 
             }
         });
+        
+        ArrayAdapter<CharSequence> spinnerWatchesAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, watches);
+        Spinner spinnerWatches = (Spinner) findViewById( R.id.spinnerWatches );
+        spinnerWatches.setAdapter( spinnerWatchesAdapter );
+
         
         // OK button actually logs, displays an "OK" dialog, and after the dialog is acknowledged, closes
         // the activity
@@ -56,8 +68,12 @@ public class LogActivity extends Activity {
                 serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
                 
                 Log.d("WatchCheck", "Found watch with id="+id+", name="+name+", serial="+serial);
+                
+                watches.add(name);
             } while ( cur.moveToNext());
         }
+        
+        watches.add(getResources().getString(R.string.addWatch));
     }
 
 }
