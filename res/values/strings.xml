@@ -13,4 +13,5 @@
     <string name="cancel">Cancel</string>
     <string name="measure">Measure</string>
     <string name="addWatch">add watch</string>
+    <string name="selectWatch">select your watch</string>
 </resources>

@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
     <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView1" android:text="@string/headlineLog" android:layout_width="match_parent" android:gravity="center_horizontal"></TextView>
-    <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/spinnerWatches"></Spinner>
+    <Spinner android:prompt="@string/selectWatch" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/spinnerWatches"></Spinner>
     <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1">
     	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonLogCancel" android:text="@string/cancel"></Button>
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="right" android:id="@+id/buttonLogOK" android:text="@string/OK"></Button>

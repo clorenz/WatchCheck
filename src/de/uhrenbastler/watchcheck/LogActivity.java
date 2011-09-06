@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
@@ -40,7 +41,18 @@ public class LogActivity extends Activity {
             }
         });
         
-        ArrayAdapter<CharSequence> spinnerWatchesAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, watches);
+        // Evtl. einen SimpleCursorAdapter (gemäß http://android-developers.de/tutorials-faqs/daten-in-eine-spinner-laden-402.html
+        // verwenden??
+        
+        Uri uriWatches = Watches.CONTENT_URI;
+        String[] columns = new String[] { Watches.WATCH_ID, Watches.NAME, Watches.SERIAL };
+        
+        Cursor cur = managedQuery(uriWatches, columns, null, null, Watches.NAME);
+        SimpleCursorAdapter spinnerWatchesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item,
+        		cur, new String[] { Watches.NAME, Watches.SERIAL  }, new int[] {android.R.id.text1}); 
+
+        
+        //ArrayAdapter<CharSequence> spinnerWatchesAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, watches);
         Spinner spinnerWatches = (Spinner) findViewById( R.id.spinnerWatches );
         spinnerWatches.setAdapter( spinnerWatchesAdapter );
 
