@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:orientation="vertical">
+        <TableLayout android:id="@+id/tableLayout1" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/mode"/> 
+    			<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/modeNtp" android:layout_marginLeft="5dp" android:id="@+id/Mode"/>    
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:text="@string/timeOfYourWatch" android:layout_marginTop="30dp" android:layout_height="wrap_content"/>
+	<TimePicker android:id="@+id/TimePicker1" android:layout_height="wrap_content" android:layout_width="match_parent"></TimePicker>
+	<Button android:layout_height="wrap_content" android:id="@+id/buttonCheckTime" android:layout_width="match_parent" android:text="@string/measure"></Button>
+	<EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:id="@+id/deltaTime">
+	    <requestFocus></requestFocus>
+	</EditText>
+	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttnLog" android:id="@+id/buttonLog" android:clickable="false" android:enabled="false"></Button>
+</LinearLayout>

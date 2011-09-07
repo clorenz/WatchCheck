@@ -7,3 +7,11 @@ Logging:
     - Temperatur (bei Chronometerpos)
     - Anmerkung
     - Logging-Timestamp
+
+    - NEU: Meßperiode
+
+
+Startscreen: TabLayout mit drei Tabs:
+	- Select watch   (-> ListView mit am Ende "Add watch")
+	- Check watch	 (-> Logging-Stuff)
+	- Results

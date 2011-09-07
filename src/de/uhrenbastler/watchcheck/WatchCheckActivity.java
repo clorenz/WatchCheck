@@ -35,7 +35,7 @@ public class WatchCheckActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
   
-        setContentView(R.layout.main);
+        setContentView(R.layout.watchcheck);
 
         Toast toast = Toast.makeText(WatchCheckActivity.this, "Trying to get NTP time...", Toast.LENGTH_SHORT);
         toast.show();
