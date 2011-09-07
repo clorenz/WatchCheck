@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
@@ -41,24 +43,42 @@ public class LogActivity extends Activity {
             }
         });
         
-        // Evtl. einen SimpleCursorAdapter (gemäß http://android-developers.de/tutorials-faqs/daten-in-eine-spinner-laden-402.html
-        // verwenden??
-        
-        Uri uriWatches = Watches.CONTENT_URI;
-        String[] columns = new String[] { Watches.WATCH_ID, Watches.NAME, Watches.SERIAL };
-        
-        Cursor cur = managedQuery(uriWatches, columns, null, null, Watches.NAME);
-        SimpleCursorAdapter spinnerWatchesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item,
-        		cur, new String[] { Watches.NAME, Watches.SERIAL  }, new int[] {android.R.id.text1}); 
-
-        
-        //ArrayAdapter<CharSequence> spinnerWatchesAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, watches);
+        ArrayAdapter<CharSequence> spinnerWatchesAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, watches);
+        spinnerWatchesAdapter.add("New watch");
         Spinner spinnerWatches = (Spinner) findViewById( R.id.spinnerWatches );
         spinnerWatches.setAdapter( spinnerWatchesAdapter );
+        spinnerWatches.setOnItemSelectedListener(new OnItemSelectedListener() {
+        	 
+			@Override
+			// TODO: Hier wird auch "Selected watch new watch" selektiert!!"
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long id) {
+				if ( position > watches.size())
+					Log.d("WatchCheck","Insert new watch");
+				else
+					Log.d("WatchCheck","Selected watch "+watches.get(position));
+				
+			}
 
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
+
+        
         
         // OK button actually logs, displays an "OK" dialog, and after the dialog is acknowledged, closes
         // the activity
+        Button buttonOk = (Button) findViewById(R.id.buttonLogOK);
+        buttonOk.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                LogActivity.this.finish();       
+            }
+        });
         
     }
 
@@ -81,7 +101,7 @@ public class LogActivity extends Activity {
                 
                 Log.d("WatchCheck", "Found watch with id="+id+", name="+name+", serial="+serial);
                 
-                watches.add(name);
+                watches.add(name +(serial!=null?"("+serial+")":""));
             } while ( cur.moveToNext());
         }
         
