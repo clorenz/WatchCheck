@@ -28,5 +28,4 @@ public class Watch {
         
         public static final String COMMENT = "comment";
     }
-
 }

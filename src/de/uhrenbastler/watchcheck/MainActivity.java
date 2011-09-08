@@ -43,7 +43,7 @@ public class MainActivity extends TabActivity {
 	    Intent intent;  // Reusable Intent for each tab
 
 	    // Create an Intent to launch an Activity for the tab (to be reused)
-	    intent = new Intent().setClass(this, WatchCheckActivity.class);
+	    intent = new Intent().setClass(this, SelectWatchActivity.class);
 	    // Initialize a TabSpec for each tab and add it to the TabHost
 	    spec = tabHost.newTabSpec("select").setIndicator("Select watch",
 	                      res.getDrawable(R.drawable.icon))
@@ -64,5 +64,8 @@ public class MainActivity extends TabActivity {
 	    tabHost.addTab(spec);
 
 	    tabHost.setCurrentTab(0);
+	    
+	    tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);	
+	    tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);	
 	}
 }
