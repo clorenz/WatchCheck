@@ -43,6 +43,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * @see http://www.softwarepassion.com/android-series-custom-listview-items-and-adapters/
+ * TODO Please remind clorenz to comment SelectWatchActivity.java
+ * @author clorenz
+ * @created on 08.09.2011
+ */
 public class SelectWatchActivity extends Activity {
 
 	List<WatchItem> watches = new ArrayList<WatchItem>();
