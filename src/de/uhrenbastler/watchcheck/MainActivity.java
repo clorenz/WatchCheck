@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TabHost;
 
 public class MainActivity extends TabActivity {
@@ -43,6 +44,8 @@ public class MainActivity extends TabActivity {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		int selectedWatchId = preferences.getInt(PREFERENCE_CURRENT_WATCH, -1);
+		
+		Log.d("WatchCheck","Selected Watch ID from preferences = "+selectedWatchId);
 		
 	    setContentView(R.layout.main);
 

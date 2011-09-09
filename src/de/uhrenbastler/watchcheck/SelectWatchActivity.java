@@ -89,7 +89,7 @@ public class SelectWatchActivity extends Activity {
 					// Put found watch into preferences and enable tabs
 					SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SelectWatchActivity.this);
 					SharedPreferences.Editor editor = preferences.edit();
-					editor.putInt(MainActivity.PREFERENCE_CURRENT_WATCH, (int)id);
+					editor.putInt(MainActivity.PREFERENCE_CURRENT_WATCH, (int)watches.get((int)id).getId());
 					editor.commit();
 					
 					TabHost tabHost = ((TabActivity) getParent()).getTabHost();
@@ -110,7 +110,7 @@ public class SelectWatchActivity extends Activity {
 	// http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
 	private void getAllWatchesFromDatabase() {
 		Uri uriWatches = Watches.CONTENT_URI;
-		String[] columns = new String[] { Watches.WATCH_ID, Watches.NAME,
+		String[] columns = new String[] { Watches._ID, Watches.NAME,
 				Watches.SERIAL };
 
 		Cursor cur = managedQuery(uriWatches, columns, null, null, Watches.NAME);
@@ -120,7 +120,7 @@ public class SelectWatchActivity extends Activity {
 			String name = null;
 			String serial = null;
 			do {
-				id = cur.getLong(cur.getColumnIndex(Watches.WATCH_ID));
+				id = cur.getLong(cur.getColumnIndex(Watches._ID));
 				name = cur.getString(cur.getColumnIndex(Watches.NAME));
 				serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
 
