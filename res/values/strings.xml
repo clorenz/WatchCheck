@@ -18,4 +18,5 @@
     <string name="addWatchModel">Model: </string>
     <string name="addWatchSerial">Serial: </string>
     <string name="addWatchRemarks">Remarks: </string>
+    <string name="watch">Watch to check: </string>
 </resources>

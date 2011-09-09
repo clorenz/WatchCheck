@@ -26,15 +26,24 @@ package de.uhrenbastler.watchcheck;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.TabHost;
 
 public class MainActivity extends TabActivity {
 	
+	public static final String PREFERENCE_CURRENT_WATCH = "currentWatch";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int selectedWatchId = preferences.getInt(PREFERENCE_CURRENT_WATCH, -1);
+		
 	    setContentView(R.layout.main);
 
 	    Resources res = getResources(); // Resource object to get Drawables
@@ -63,9 +72,14 @@ public class MainActivity extends TabActivity {
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
-	    tabHost.setCurrentTab(0);
-	    
-	    tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);	
-	    tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);	
+	    // If no watch selected, disable the other tabs
+	    if ( selectedWatchId < 0) {
+	    	tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);	
+	    	tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);
+	    	tabHost.setCurrentTab(0);
+	    } else {
+	    	// Bring "measure" tab into front
+	    	tabHost.setCurrentTab(1);
+	    }
 	}
 }

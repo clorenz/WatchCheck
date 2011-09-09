@@ -11,9 +11,13 @@ import java.util.GregorianCalendar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 
 public class WatchCheckActivity extends Activity {
@@ -36,6 +41,14 @@ public class WatchCheckActivity extends Activity {
         super.onCreate(savedInstanceState);
   
         setContentView(R.layout.watchcheck);
+        
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
+        
+        TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
+        
+        watchToCheck.setText(getWatchFromDatabase(selectedWatchId));
 
         Toast toast = Toast.makeText(WatchCheckActivity.this, "Trying to get NTP time...", Toast.LENGTH_SHORT);
         toast.show();
@@ -159,5 +172,26 @@ public class WatchCheckActivity extends Activity {
         } else {
             return 0;
         }
+    }
+    
+    
+    private String getWatchFromDatabase(int id) {
+    	
+    	Uri selectedWatch = Uri.withAppendedPath(Watches.CONTENT_URI, ""+id);
+    	String[] columns = new String[] { Watches.WATCH_ID, Watches.NAME, Watches.SERIAL };
+    	Cursor cur = managedQuery(selectedWatch, columns, null, null, null);
+    	
+		if (cur.moveToFirst()) {
+			String name = null;
+			String serial = null;
+			do {
+				name = cur.getString(cur.getColumnIndex(Watches.NAME));
+				serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
+
+				return name+"("+serial+")";
+			} while (cur.moveToNext());
+		}
+		
+		return "?";
     }
 }

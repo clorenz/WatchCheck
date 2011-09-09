@@ -24,17 +24,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ** ------------------------------------------------------------------------- */
 package de.uhrenbastler.watchcheck;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 import android.app.Activity;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +48,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +86,18 @@ public class SelectWatchActivity extends Activity {
 					Intent intent = new Intent(SelectWatchActivity.this, AddWatchActivity.class);
 	                startActivity(intent);
 				} else {
-					// TODO gewählte Uhr in den "Kontext" legen
+					// Put found watch into preferences and enable tabs
+					SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SelectWatchActivity.this);
+					SharedPreferences.Editor editor = preferences.edit();
+					editor.putInt(MainActivity.PREFERENCE_CURRENT_WATCH, (int)id);
+					editor.commit();
+					
+					TabHost tabHost = ((TabActivity) getParent()).getTabHost();
+					tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);	
+			    	tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(true);
+			    	
+			    	// Bring "check" tab to front
+			    	tabHost.setCurrentTab(1);
 				}
 			}
 		});
