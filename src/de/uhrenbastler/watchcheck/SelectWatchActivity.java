@@ -31,6 +31,7 @@ import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,10 +39,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @see http://www.softwarepassion.com/android-series-custom-listview-items-and-adapters/
@@ -67,7 +71,24 @@ public class SelectWatchActivity extends Activity {
 		
 		listView.setAdapter(listAdapter);
 
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				if ( id == (watches.size()-1)) {
+					// "Add Watch"
+					Intent intent = new Intent(SelectWatchActivity.this, AddWatchActivity.class);
+	                startActivity(intent);
+				} else {
+					// TODO gewählte Uhr in den "Kontext" legen
+				}
+			}
+		});
 	}
+	
+	
+	
 
 	// ->
 	// http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/

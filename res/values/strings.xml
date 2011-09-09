@@ -14,4 +14,8 @@
     <string name="measure">Measure</string>
     <string name="addWatch">add watch</string>
     <string name="selectWatch">select your watch</string>
+    <string name="headlineAddWatch">Add watch</string>
+    <string name="addWatchModel">Model: </string>
+    <string name="addWatchSerial">Serial: </string>
+    <string name="addWatchRemarks">Remarks: </string>
 </resources>
