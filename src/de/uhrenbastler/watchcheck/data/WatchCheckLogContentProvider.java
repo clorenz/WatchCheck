@@ -33,6 +33,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(AUTHORITY, Watches.TABLE_NAME, 1);
+        sUriMatcher.addURI(AUTHORITY, Watches.TABLE_NAME+"/#", 1);
         sUriMatcher.addURI(AUTHORITY, Logs.TABLE_NAME, 2);
         
         watchesProjectionMap = new HashMap<String,String>();

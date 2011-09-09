@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -176,10 +177,14 @@ public class WatchCheckActivity extends Activity {
     
     
     private String getWatchFromDatabase(int id) {
+    	Uri selectedWatchUri = Uri.withAppendedPath(Watches.CONTENT_URI, ""+id);
     	
-    	Uri selectedWatch = Uri.withAppendedPath(Watches.CONTENT_URI, ""+id);
-    	String[] columns = new String[] { Watches.WATCH_ID, Watches.NAME, Watches.SERIAL };
-    	Cursor cur = managedQuery(selectedWatch, columns, null, null, null);
+    	Log.d("WatchCheck", "Retrieving watch "+id+" from content provider with uri="+selectedWatchUri);
+    	
+    	String[] columns = new String[] { Watches._ID, Watches.NAME, Watches.SERIAL };
+    	
+    	ContentResolver cr = this.getContentResolver();
+    	Cursor cur = cr.query(selectedWatchUri, columns, null, null, null);
     	
 		if (cur.moveToFirst()) {
 			String name = null;
