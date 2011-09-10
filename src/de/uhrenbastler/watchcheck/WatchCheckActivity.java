@@ -30,6 +30,11 @@ import android.widget.Toast;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 
+/**
+ * In dieser Activity wird der Stand der Uhr ermittelt
+ * @author clorenz
+ * @created on 10.09.2011
+ */
 public class WatchCheckActivity extends Activity {
     
     private Button checkButton;

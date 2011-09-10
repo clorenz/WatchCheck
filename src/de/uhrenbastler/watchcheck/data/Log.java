@@ -28,6 +28,11 @@ public class Log {
         
         public static final String NTP_DIFF = "ntpDiff";                // diff local to ntp
         
+        /**
+         * This flag, when set, indicates the begin of a new measure period
+         */
+        public static final String FLAG_RESET = "reset";
+        
         public static final String POSITION = "position";
         
         public static final String TEMPERATURE = "temperature";

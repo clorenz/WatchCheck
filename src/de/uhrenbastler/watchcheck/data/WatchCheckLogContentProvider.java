@@ -25,7 +25,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher;
     private static final int WATCHES = 1;
     private static final int LOGS = 2;
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private DatabaseHelper dbHelper;
     private static Map<String, String> watchesProjectionMap;
     private static Map<String, String> logsProjectionMap;
@@ -49,6 +49,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         logsProjectionMap.put(Logs.MODUS, Logs.MODUS);
         logsProjectionMap.put(Logs.LOCAL_TIMESTAMP, Logs.LOCAL_TIMESTAMP);
         logsProjectionMap.put(Logs.NTP_DIFF, Logs.NTP_DIFF);
+        logsProjectionMap.put(Logs.FLAG_RESET, Logs.FLAG_RESET);
         logsProjectionMap.put(Logs.POSITION, Logs.POSITION);
         logsProjectionMap.put(Logs.TEMPERATURE, Logs.TEMPERATURE);
         logsProjectionMap.put(Logs.COMMENT, Logs.COMMENT);
@@ -79,6 +80,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
                     Logs.MODUS + " VARCHAR(5), "+
                     Logs.LOCAL_TIMESTAMP + " TIMESTAMP, "+
                     Logs.NTP_DIFF + " DECIMAL(6,2), "+
+                    Logs.FLAG_RESET + " BOOLEAN, "+
                     Logs.POSITION + " VARCHAR(2), "+
                     Logs.TEMPERATURE + " INTEGER, "+
                     Logs.COMMENT + " TEXT);");
@@ -86,11 +88,13 @@ public class WatchCheckLogContentProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if ( oldVersion == 1 && newVersion == 2) {
-                db.execSQL("ALTER TABLE watch RENAME TO "+Watches.TABLE_NAME);
-                return;
+            if ( oldVersion == 1 && newVersion >= 2) {
+                db.execSQL("ALTER TABLE " + Logs.WATCH_ID +" RENAME TO "+Watches.TABLE_NAME);
+            } 
+            if ( oldVersion == 2 && newVersion == 3 ) {
+            	db.execSQL("ALTER TABLE " + Logs.TABLE_NAME +" ADD COLUMN "+
+            			Logs.FLAG_RESET+" BOOLEAN");
             }
-            throw new IllegalArgumentException("Upgrading the database from "+oldVersion+" to "+newVersion+" is not yet implemented!");
         }
     }
 
