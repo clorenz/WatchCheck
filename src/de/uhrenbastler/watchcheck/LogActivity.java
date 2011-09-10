@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 
@@ -26,8 +28,8 @@ public class LogActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-  
-        setContentView(R.layout.log);
+        
+        setContentView(R.layout.log);  
         
         // Get all watches of from the content provider
         getAllWatchesFromDatabase();

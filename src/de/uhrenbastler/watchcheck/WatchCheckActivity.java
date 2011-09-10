@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -51,9 +52,6 @@ public class WatchCheckActivity extends Activity {
         
         watchToCheck.setText(getWatchFromDatabase(selectedWatchId));
 
-        Toast toast = Toast.makeText(WatchCheckActivity.this, "Trying to get NTP time...", Toast.LENGTH_SHORT);
-        toast.show();
-        
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
         watchtimePicker.setIs24HourView(true);
         
@@ -66,6 +64,9 @@ public class WatchCheckActivity extends Activity {
             String ntpMode = getResources().getString(R.string.modeNtp);
             ntpMode = ntpMode.replaceFirst("\\%s", ""+ntpDelta);
             modeView.setText(ntpMode);
+
+            getParent().setTitle(getResources().getString(R.string.app_name) + " [NTP]");
+            
         } catch ( Exception e) {
             Log.e("WatchCheck", e.getMessage());
             modeView.setText(R.string.modeLocal);

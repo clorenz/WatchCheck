@@ -31,7 +31,10 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 public class MainActivity extends TabActivity {
 	
@@ -39,6 +42,7 @@ public class MainActivity extends TabActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -84,5 +88,10 @@ public class MainActivity extends TabActivity {
 	    	// Bring "measure" tab into front
 	    	tabHost.setCurrentTab(1);
 	    }
+	    
+	    
+	    //TODO: Idee: Hier NTP ermitteln und via http://stackoverflow.com/questions/820398/android-change-custom-title-view-at-run-time
+	    // oder noch besser http://www.londatiga.net/how-to-create-custom-window-title-in-android/
+	    // einen Marker in die Titelbar setzen
 	}
 }
