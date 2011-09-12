@@ -19,4 +19,8 @@
     <string name="addWatchSerial">Serial: </string>
     <string name="addWatchRemarks">Remarks: </string>
     <string name="watch">Watch to check: </string>
+    <string name="newPeriod">New measure period: </string>
+    <string name="position">Position: </string>
+    <string name="temperature">Temperature: </string>
+    <string name="comment">Comment: </string>
 </resources>

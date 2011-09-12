@@ -5,9 +5,28 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
     <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView1" android:text="@string/headlineLog" android:layout_width="match_parent" android:gravity="center_horizontal"></TextView>
-    <Spinner android:prompt="@string/selectWatch" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/spinnerWatches"></Spinner>
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1">
+   	<TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/tableLayoutLog1" android:stretchColumns="1" android:layout_marginTop="20dp">
+        <TableRow android:id="@+id/tableRowLog1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewNewPeriod" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/newPeriod"></TextView>
+        	<CheckBox android:id="@+id/logCheckBoxNewPeriod" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+        </TableRow>
+        <TableRow android:id="@+id/tableRowLog2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewPosition" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/position"></TextView>
+        	<Spinner android:id="@+id/logSpinnerPosition" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+        </TableRow>
+        <TableRow android:id="@+id/tableRowLog3" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewTemperature" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/temperature"></TextView>
+        	<Spinner android:id="@+id/logSpinnerTemperature" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+        </TableRow>
+        <TableRow android:id="@+id/tableRowLog4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewComment" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/comment"></TextView>
+        	<EditText android:id="@+id/logComment" android:layout_height="wrap_content" android:layout_width="match_parent">
+        		<requestFocus></requestFocus>
+        	</EditText>	
+        </TableRow>
+    </TableLayout>  
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1" android:layout_marginTop="20dp" android:layout_gravity="right" android:gravity="right">
     	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonLogCancel" android:text="@string/cancel"></Button>
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="right" android:id="@+id/buttonLogOK" android:text="@string/OK"></Button>
-    </LinearLayout>  
+    </LinearLayout>
 </LinearLayout>
