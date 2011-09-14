@@ -1,5 +1,7 @@
 package de.uhrenbastler.watchcheck;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,11 @@ public class LogActivity extends Activity {
 		Log.d("WatchCheck","deviation="+deviation);
         
         setContentView(R.layout.log); 
+        
+        TextView textDeviation = (TextView) findViewById(R.id.textViewDeviationValue);
+        DecimalFormat df = new DecimalFormat("#.#");
+        
+        textDeviation.setText( (deviation>0?"+":deviation<0?"-":"+-") + df.format(Math.abs(deviation)) +" sec." );
         
         Spinner positionSpinner = (Spinner) findViewById(R.id.logSpinnerPosition); 
         ArrayAdapter<?> positionAdapter = ArrayAdapter.createFromResource( this,

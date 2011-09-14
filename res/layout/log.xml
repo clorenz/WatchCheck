@@ -7,6 +7,10 @@
     <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView1" android:text="@string/headlineLog" android:layout_width="match_parent" android:gravity="center_horizontal"></TextView>
    	<TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/tableLayoutLog1" android:stretchColumns="1" android:layout_marginTop="20dp">
         <TableRow android:id="@+id/tableRowLog1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewDeviation" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/deviation"></TextView>
+        	<TextView android:layout_height="wrap_content" android:id="@+id/textViewDeviationValue" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/zero"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRowLog1" android:layout_width="wrap_content" android:layout_height="wrap_content">
         	<TextView android:layout_height="wrap_content" android:id="@+id/textViewNewPeriod" android:layout_width="match_parent" android:gravity="center_horizontal" android:text="@string/newPeriod"></TextView>
         	<CheckBox android:id="@+id/logCheckBoxNewPeriod" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>

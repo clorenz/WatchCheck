@@ -23,4 +23,6 @@
     <string name="position">Position: </string>
     <string name="temperature">Temperature: </string>
     <string name="comment">Comment: </string>
+    <string name="deviation">Deviation: </string>
+    <string name="zero">+- 0 sec</string>
 </resources>
