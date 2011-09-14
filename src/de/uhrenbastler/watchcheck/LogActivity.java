@@ -23,9 +23,20 @@ import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 public class LogActivity extends Activity {
 	
-    @Override
+    protected static final String ATTR_DEVIATION = "attrDeviation";
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			Log.w("WatchCheck", "LogActivity called without data!!");
+			return;
+		}
+		
+		double deviation = extras.getDouble(ATTR_DEVIATION);
+		Log.d("WatchCheck","deviation="+deviation);
         
         setContentView(R.layout.log); 
         

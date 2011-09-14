@@ -38,9 +38,9 @@ import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 public class WatchCheckActivity extends Activity {
     
     private Button checkButton;
-    private Button logButton;
     private TimePicker watchtimePicker;
     private double ntpDelta=0;
+    private double deviation=0;
     
     /** Called when the activity is first created. */
     @Override
@@ -94,29 +94,15 @@ public class WatchCheckActivity extends Activity {
                 watchTime.set(Calendar.SECOND,0);
                 watchTime.set(Calendar.MILLISECOND,0);
                 
-                int deltaSeconds = (int)(watchTime.getTimeInMillis() - referenceTime.getTimeInMillis()) / 1000;
+                // Precision: 1/10 sec
+                deviation = (float)(watchTime.getTimeInMillis() - referenceTime.getTimeInMillis()) / 1000;
                 
-                TextView deltaTime = (TextView) findViewById(R.id.deltaTime);
-                deltaTime.setText("Delta: "+(deltaSeconds>0?"+":deltaSeconds<0?"":"+-")+deltaSeconds+" sec");
-                
-                Button buttonLog = (Button) findViewById(R.id.buttonLog);
-                buttonLog.setClickable(true); buttonLog.setEnabled(true);
-                
-            }
-        });
-        
-        
-        logButton = (Button) findViewById(R.id.buttonLog);
-        logButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
                 Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
+                logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);
+                
                 startActivity(logIntent);
             }
-            
         });
-        
     }
 
     protected double getNtpDelta() throws IOException {

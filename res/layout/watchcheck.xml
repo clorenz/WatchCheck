@@ -20,9 +20,14 @@
 	    android:layout_width="fill_parent" 
 	    android:text="@string/timeOfYourWatch" android:layout_marginTop="30dp" android:layout_height="wrap_content"/>
 	<TimePicker android:id="@+id/TimePicker1" android:layout_height="wrap_content" android:layout_width="match_parent"></TimePicker>
-	<Button android:layout_height="wrap_content" android:id="@+id/buttonCheckTime" android:layout_width="match_parent" android:text="@string/measure"></Button>
-	<EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:id="@+id/deltaTime">
-	    <requestFocus></requestFocus>
-	</EditText>
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttnLog" android:id="@+id/buttonLog" android:clickable="false" android:enabled="false"></Button>
+	
+	
+	<LinearLayout android:layout_width="fill_parent"
+	  	android:layout_height="fill_parent"
+	  	android:layout_gravity="bottom"
+	  	android:orientation="horizontal">
+	<FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/frameLayout1" android:background="#AA999999"  android:padding="10dp" android:layout_gravity="bottom">
+		<Button android:layout_height="wrap_content" android:id="@+id/buttonCheckTime" android:layout_width="match_parent" android:text="@string/measure"></Button>
+	</FrameLayout>
+	</LinearLayout>
 </LinearLayout>
