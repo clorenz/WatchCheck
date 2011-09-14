@@ -1,26 +1,16 @@
 package de.uhrenbastler.watchcheck;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 
 public class LogActivity extends Activity {
@@ -60,21 +50,13 @@ public class LogActivity extends Activity {
         temperatureSpinner.setAdapter(temperatureAdapter); 
         
         
-        // Cancel button just closes the activity
-        Button buttonCancel = (Button) findViewById(R.id.buttonLogCancel);
-        buttonCancel.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                LogActivity.this.finish();
-                
-            }
-        });
-        
         // OK button actually logs, displays an "OK" dialog, and after the dialog is acknowledged, closes
         // the activity
-        Button buttonOk = (Button) findViewById(R.id.buttonLogOK);
-        buttonOk.setOnClickListener(new OnClickListener() {
+        
+        
+        // TODO: Save-Dioalog
+        Button buttonSave = (Button) findViewById(R.id.buttonSave);
+        buttonSave.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
