@@ -29,12 +29,14 @@
         	</EditText>	
         </TableRow>
     </TableLayout>  
+    
     <LinearLayout android:layout_width="fill_parent"
 	  	android:layout_height="fill_parent"
 	  	android:layout_gravity="bottom"
 	  	android:orientation="horizontal">
-		<FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/logFrameLayout1" android:background="#AA999999"  android:padding="10dp" android:layout_gravity="bottom">
+		<FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/logFrameLayout1" android:background="#AA999999"  android:padding="10dp" android:layout_gravity="bottom">	
 			<Button android:layout_height="wrap_content" android:id="@+id/buttonSave" android:layout_width="match_parent" android:text="@string/save"></Button>
 		</FrameLayout>
 	</LinearLayout>
+
 </LinearLayout>

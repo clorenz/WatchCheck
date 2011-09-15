@@ -41,6 +41,8 @@ public class WatchCheckActivity extends Activity {
     private TimePicker watchtimePicker;
     private double ntpDelta=0;
     private double deviation=0;
+    private int selectedWatchId = -1;
+    private boolean modeNtp=false;
     
     /** Called when the activity is first created. */
     @Override
@@ -51,7 +53,7 @@ public class WatchCheckActivity extends Activity {
         
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		int selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
+		selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
         
         TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
         
@@ -72,6 +74,8 @@ public class WatchCheckActivity extends Activity {
 
             getParent().setTitle(getResources().getString(R.string.app_name) + " [NTP]");
             
+            modeNtp=true;
+            
         } catch ( Exception e) {
             Log.e("WatchCheck", e.getMessage());
             modeView.setText(R.string.modeLocal);
@@ -83,6 +87,7 @@ public class WatchCheckActivity extends Activity {
             @Override
             public void onClick(View v) {
                 GregorianCalendar referenceTime = new GregorianCalendar();
+                GregorianCalendar localTime = (GregorianCalendar) referenceTime.clone();
                 referenceTime.add(Calendar.SECOND, -1 * (int) ntpDelta);
                
                 Integer minute = watchtimePicker.getCurrentMinute();
@@ -99,6 +104,10 @@ public class WatchCheckActivity extends Activity {
                 
                 Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
                 logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);
+                logIntent.putExtra(LogActivity.ATTR_WATCH_ID, selectedWatchId);
+                logIntent.putExtra(LogActivity.ATTR_MODE_NTP, modeNtp);
+                logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);
+                logIntent.putExtra(LogActivity.ATTR_NTP_TIME, modeNtp?referenceTime:null);
                 
                 startActivity(logIntent);
             }

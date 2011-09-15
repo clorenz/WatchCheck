@@ -1,11 +1,16 @@
 package de.uhrenbastler.watchcheck.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import de.uhrenbastler.watchcheck.R;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 
 public class Log {
-    
+	
     public Log() {}
     
     public static final class Logs implements BaseColumns {
@@ -27,6 +32,8 @@ public class Log {
         public static final String LOCAL_TIMESTAMP = "local_timestamp";             // local timestamp
         
         public static final String NTP_DIFF = "ntpDiff";                // diff local to ntp
+        
+        public static final String DEVIATION = "deviation";
         
         /**
          * This flag, when set, indicates the begin of a new measure period

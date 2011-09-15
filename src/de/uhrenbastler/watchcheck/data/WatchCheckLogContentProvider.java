@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 // -> http://thinkandroid.wordpress.com/2010/01/13/writing-your-own-contentprovider/
 
@@ -25,7 +26,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher;
     private static final int WATCHES = 1;
     private static final int LOGS = 2;
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     private DatabaseHelper dbHelper;
     private static Map<String, String> watchesProjectionMap;
     private static Map<String, String> logsProjectionMap;
@@ -74,12 +75,19 @@ public class WatchCheckLogContentProvider extends ContentProvider {
                     Watches.DATE_CREATE + " TIMESTAMP, "+
                     Watches.COMMENT+" TEXT);");      
             
+            /* Beispiel: 1|1|1|2011-09-15 22:22:13|-1||-273||0|-12.5900001525879
+            	sqlite> .schema logs
+CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modus VARCHAR(5), local_timestamp TIMESTAMP, ntpDiff DECIMAL(6,2), position VARCHAR(2), temperature INTEGER, comment TEXT, reset BOOLEAN, deviation DECIMAL(6,2));
+				*/
+            
+            
             db.execSQL("CREATE TABLE " + Logs.TABLE_NAME+" (" +
                     Logs.LOG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
                     Logs.WATCH_ID + " INTEGER, "+
                     Logs.MODUS + " VARCHAR(5), "+
                     Logs.LOCAL_TIMESTAMP + " TIMESTAMP, "+
                     Logs.NTP_DIFF + " DECIMAL(6,2), "+
+                    Logs.DEVIATION + " DECIMAL(6,2), "+
                     Logs.FLAG_RESET + " BOOLEAN, "+
                     Logs.POSITION + " VARCHAR(2), "+
                     Logs.TEMPERATURE + " INTEGER, "+
@@ -88,12 +96,19 @@ public class WatchCheckLogContentProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        	Log.i("WatchCheck", "Upgrading DB from "+oldVersion+" to "+newVersion);
             if ( oldVersion == 1 && newVersion >= 2) {
                 db.execSQL("ALTER TABLE " + Logs.WATCH_ID +" RENAME TO "+Watches.TABLE_NAME);
+                onUpgrade(db, (oldVersion)+1, newVersion);
             } 
-            if ( oldVersion == 2 && newVersion == 3 ) {
+            if ( oldVersion == 2 && newVersion >= 3 ) {
             	db.execSQL("ALTER TABLE " + Logs.TABLE_NAME +" ADD COLUMN "+
             			Logs.FLAG_RESET+" BOOLEAN");
+            	onUpgrade(db, (oldVersion+1), newVersion);
+            }
+            if ( oldVersion == 3 && newVersion == 4) {
+            	db.execSQL("ALTER TABLE " + Logs.TABLE_NAME +" ADD COLUMN "+
+            			Logs.DEVIATION+" DECIMAL(6,2)");
             }
         }
     }
