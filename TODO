@@ -10,8 +10,6 @@ Logging:
 
     - NEU: Meßperiode
 
-
-Startscreen: TabLayout mit drei Tabs:
-	- Select watch   (-> ListView mit am Ende "Add watch")
-	- Check watch	 (-> Logging-Stuff)
-	- Results
+Bugs:
+	- Add a new watch does not update the list in the "select watch" screen!!
+    - Select watch seems to pick the wrong watch!
