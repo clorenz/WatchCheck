@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -41,6 +43,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
@@ -56,7 +59,6 @@ import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 /**
  * @see http://www.softwarepassion.com/android-series-custom-listview-items-and-adapters/
- * TODO Please remind clorenz to comment SelectWatchActivity.java
  * @author clorenz
  * @created on 08.09.2011
  */
@@ -64,6 +66,7 @@ public class SelectWatchActivity extends Activity {
 
 	List<WatchItem> watches = new ArrayList<WatchItem>();
 	ListView listView;
+	long selectedWatchId;
 	
 
 	/**
@@ -136,17 +139,56 @@ public class SelectWatchActivity extends Activity {
 				
 				WatchItem watchItem = (WatchItem) listView.getAdapter().getItem(position);
 				
+				selectedWatchId = watchItem.getId();
 				String serial=watchItem.getSerial();
 				menu.setHeaderTitle(watchItem.getName() + (serial!=null && serial.length()>0 ?
 						" ("+serial+")":"")); 
 				MenuInflater inflater = getMenuInflater();
 				inflater.inflate(R.menu.cm_select_watch, menu);
-			}
+			}			
 		});
 	}
 	
 	
 	
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+		final WatchItem watchItem = (WatchItem) listView.getAdapter().getItem(menuInfo.position);
+		
+		switch (item.getItemId()) {
+			case R.id.selectWatchEdit:	Log.d("WatchCheck", "Editing watch "+watchItem); return true;
+			case R.id.selectWatchDelete:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(getResources().getString(R.string.deleteWatch).replace("%s",watchItem.getName()))
+				       .setCancelable(false)
+				       .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	   getContentResolver().delete(Watches.CONTENT_URI, Watches.WATCH_ID, new String[] { ""+watchItem.getId()});
+				        	   dialog.dismiss();
+				           }
+				       })
+				       .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				
+				alert.show();
+				return true;
+			default:
+				Log.e("WatchCheck","unknown itemId "+item.getItemId());
+				return false;
+		}
+	}
+
+
+
 
 	// ->
 	// http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
@@ -155,25 +197,31 @@ public class SelectWatchActivity extends Activity {
 		String[] columns = new String[] { Watches._ID, Watches.NAME,
 				Watches.SERIAL };
 
-		Cursor cur = managedQuery(uriWatches, columns, null, null, Watches.NAME);
+		Cursor cur=null;
+		try {
+			cur = managedQuery(uriWatches, columns, null, null, Watches.NAME);
 
-		if (cur.moveToFirst()) {
-			Long id = null;
-			String name = null;
-			String serial = null;
-			do {
-				id = cur.getLong(cur.getColumnIndex(Watches._ID));
-				name = cur.getString(cur.getColumnIndex(Watches.NAME));
-				serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
+			if (cur.moveToFirst()) {
+				Long id = null;
+				String name = null;
+				String serial = null;
+				do {
+					id = cur.getLong(cur.getColumnIndex(Watches._ID));
+					name = cur.getString(cur.getColumnIndex(Watches.NAME));
+					serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
+	
+					Log.d("WatchCheck", "Found watch with id=" + id + ", name="
+							+ name + ", serial=" + serial);
+	
+					watches.add(new WatchItem(id,name, serial));
+				} while (cur.moveToNext());
+			}
 
-				Log.d("WatchCheck", "Found watch with id=" + id + ", name="
-						+ name + ", serial=" + serial);
-
-				watches.add(new WatchItem(id,name, serial));
-			} while (cur.moveToNext());
+			watches.add(new WatchItem(-1,"",getResources().getString(R.string.addWatch)));
+		} finally {
+			if ( cur !=null )
+				cur.close();
 		}
-
-		watches.add(new WatchItem(-1,"",getResources().getString(R.string.addWatch)));
 	}
 	
 	
@@ -205,6 +253,15 @@ public class SelectWatchActivity extends Activity {
 		public long getId() {
 			return id;
 		}
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "WatchItem [id=" + id + ", name=" + name + ", serial="
+					+ serial + "]";
+		}
+		
 	}
 	
 	

@@ -183,19 +183,26 @@ public class WatchCheckActivity extends Activity {
     	String[] columns = new String[] { Watches._ID, Watches.NAME, Watches.SERIAL };
     	
     	ContentResolver cr = this.getContentResolver();
-    	Cursor cur = cr.query(selectedWatchUri, columns, null, null, null);
+    	Cursor cur = null;
     	
-		if (cur.moveToFirst()) {
-			String name = null;
-			String serial = null;
-			do {
-				name = cur.getString(cur.getColumnIndex(Watches.NAME));
-				serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
-
-				return name+"("+serial+")";
-			} while (cur.moveToNext());
-		}
-		
+    	try {
+    		cur = cr.query(selectedWatchUri, columns, null, null, null);
+    	
+			if (cur.moveToFirst()) {
+				String name = null;
+				String serial = null;
+				do {
+					name = cur.getString(cur.getColumnIndex(Watches.NAME));
+					serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
+	
+					return name+"("+serial+")";
+				} while (cur.moveToNext());
+			}
+    	} finally {
+    		if ( cur !=null)
+    			cur.close();
+    	}
+			
 		return "?";
     }
 }

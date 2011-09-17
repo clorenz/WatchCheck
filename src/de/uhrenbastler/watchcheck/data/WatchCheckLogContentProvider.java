@@ -1,5 +1,6 @@
 package de.uhrenbastler.watchcheck.data;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,22 +117,34 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db=null;
         int count;
-        switch (sUriMatcher.match(uri)) {
-            case WATCHES:
-                count = db.delete(Watches.TABLE_NAME, selection, selectionArgs);
-                break;
-
-            case LOGS:
-                count = db.delete(Logs.TABLE_NAME, selection, selectionArgs);
-                break;
-                
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
+        
+        try {
+        	db = dbHelper.getWritableDatabase();
+	        
+	        switch (sUriMatcher.match(uri)) {
+	            case WATCHES:
+	            	// TODO: Delete referencing logs, too??
+	            	Log.d("WatchCheck", "Deleting watch with "+selection+"="+Arrays.toString(selectionArgs));
+	                count = db.delete(Watches.TABLE_NAME, selection, selectionArgs);
+	                break;
+	
+	            case LOGS:
+	            	Log.d("WatchCheck", "Deleting logs with "+selection+"="+Arrays.toString(selectionArgs));
+	                count = db.delete(Logs.TABLE_NAME, selection, selectionArgs);
+	                break;
+	                
+	            default:
+	                throw new IllegalArgumentException("Unknown URI " + uri);
+	        }
+	
+	        getContext().getContentResolver().notifyChange(uri, null);
+        } finally {
+        	if ( db!=null )
+        		db.close();
         }
-
-        getContext().getContentResolver().notifyChange(uri, null);
+        
         return count;
     }
 

@@ -15,3 +15,4 @@ Bugs:
 
 TODO:
 	- Select Watch: Long tap -> Possibility to edit / delete via context menu
+    - Seems, like not everywhere cursors are properly closed!!
