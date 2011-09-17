@@ -11,7 +11,6 @@ Logging:
     - NEU: Meßperiode
 
 Bugs:
-	- Add a new watch does not update the list in the "select watch" screen!!
     - Select watch seems to pick the wrong watch!
 
 TODO:

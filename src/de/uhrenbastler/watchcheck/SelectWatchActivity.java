@@ -63,20 +63,38 @@ import de.uhrenbastler.watchcheck.data.Watch.Watches;
 public class SelectWatchActivity extends Activity {
 
 	List<WatchItem> watches = new ArrayList<WatchItem>();
+	ListView listView;
+	
 
+	/**
+	 * Since onResume() is called after onCreate, we must here
+	 * initialize the listAdapter and populate it with data!
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		getAllWatchesFromDatabase();
+		
+		ListAdapter listAdapter = new WatchAdapter(this, R.layout.watch_row, watches);
+		
+		listView.setAdapter(listAdapter);
+	}
+
+
+
+
+	/**
+	 * Only generic things here; no real data handling!
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.selectwatch);
 
-		getAllWatchesFromDatabase();
-		
-		final ListView listView = (ListView) findViewById(R.id.selectWatchListView);
-
-		ListAdapter listAdapter = new WatchAdapter(this, R.layout.watch_row, watches);
-		
-		listView.setAdapter(listAdapter);
+		listView = (ListView) findViewById(R.id.selectWatchListView);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
