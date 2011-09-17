@@ -3,8 +3,6 @@ package de.uhrenbastler.watchcheck.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.uhrenbastler.watchcheck.data.Log.Logs;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -17,6 +15,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+import de.uhrenbastler.watchcheck.data.Log.Logs;
+import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 // -> http://thinkandroid.wordpress.com/2010/01/13/writing-your-own-contentprovider/
 

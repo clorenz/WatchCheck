@@ -24,11 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ** ------------------------------------------------------------------------- */
 package de.uhrenbastler.watchcheck;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 import android.app.Activity;
 import android.app.TabActivity;
@@ -40,17 +37,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
+import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 /**
  * @see http://www.softwarepassion.com/android-series-custom-listview-items-and-adapters/
@@ -70,8 +72,8 @@ public class SelectWatchActivity extends Activity {
 
 		getAllWatchesFromDatabase();
 		
-		ListView listView = (ListView) findViewById(R.id.selectWatchListView);
-		
+		final ListView listView = (ListView) findViewById(R.id.selectWatchListView);
+
 		ListAdapter listAdapter = new WatchAdapter(this, R.layout.watch_row, watches);
 		
 		listView.setAdapter(listAdapter);
@@ -99,6 +101,28 @@ public class SelectWatchActivity extends Activity {
 			    	// Bring "check" tab to front
 			    	tabHost.setCurrentTab(1);
 				}
+			}
+		});
+
+		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo) {
+				
+				int position = ((AdapterContextMenuInfo)menuInfo).position;
+				
+				// If "add watch" is selected, we do not display the context menu!
+				if ( position >= watches.size()-1)
+					return;
+				
+				WatchItem watchItem = (WatchItem) listView.getAdapter().getItem(position);
+				
+				String serial=watchItem.getSerial();
+				menu.setHeaderTitle(watchItem.getName() + (serial!=null && serial.length()>0 ?
+						" ("+serial+")":"")); 
+				MenuInflater inflater = getMenuInflater();
+				inflater.inflate(R.menu.cm_select_watch, menu);
 			}
 		});
 	}

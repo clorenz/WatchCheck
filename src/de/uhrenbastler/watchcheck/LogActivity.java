@@ -3,11 +3,6 @@ package de.uhrenbastler.watchcheck;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import de.uhrenbastler.watchcheck.data.Log.Logs;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -22,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.uhrenbastler.watchcheck.data.Log.Logs;
 
 
 public class LogActivity extends Activity {

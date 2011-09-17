@@ -4,7 +4,7 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content" android:id="@+id/selectWatch" android:text="@string/selectWatch"></TextView>
+    <TextView android:id="@+id/selectWatch" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content" android:text="@string/selectWatch"></TextView>
     <ListView android:id="@+id/selectWatchListView" android:layout_height="wrap_content" android:layout_width="match_parent"></ListView>
     
 </LinearLayout>

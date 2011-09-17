@@ -1,10 +1,5 @@
 package de.uhrenbastler.watchcheck.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import de.uhrenbastler.watchcheck.R;
-
 import android.net.Uri;
 import android.provider.BaseColumns;
 

@@ -21,12 +21,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 

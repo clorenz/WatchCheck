@@ -13,3 +13,6 @@ Logging:
 Bugs:
 	- Add a new watch does not update the list in the "select watch" screen!!
     - Select watch seems to pick the wrong watch!
+
+TODO:
+	- Select Watch: Long tap -> Possibility to edit / delete via context menu

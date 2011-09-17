@@ -31,10 +31,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 public class MainActivity extends TabActivity {
 	
