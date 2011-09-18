@@ -127,6 +127,8 @@ public class SelectWatchActivity extends Activity {
 					tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);	
 			    	tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(true);
 			    	
+			    	Log.d("WatchCheck", "Selecting watch "+watches.get((int)id));
+			    	
 			    	// Bring "check" tab to front
 			    	tabHost.setCurrentTab(1);
 				}

@@ -9,14 +9,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -25,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
 import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 
@@ -50,34 +46,22 @@ public class WatchCheckActivity extends Activity {
   
         setContentView(R.layout.watchcheck);
         
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
-        
-        TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
-        
-        watchToCheck.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
-
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
         watchtimePicker.setIs24HourView(true);
-        
-        TextView modeView = (TextView) findViewById(R.id.Mode);
-        
-               
+                
         try {
             ntpDelta = getNtpDelta();
             
-            String ntpMode = getResources().getString(R.string.modeNtp);
-            ntpMode = ntpMode.replaceFirst("\\%s", ""+ntpDelta);
-            modeView.setText(ntpMode);
-
-            getParent().setTitle(getResources().getString(R.string.app_name) + " [NTP]");
+            DecimalFormat df = new DecimalFormat("#.##");
+            String deviationString = df.format(ntpDelta);
+            if ( ntpDelta>0)
+            	deviationString = "+"+deviationString;
+            getParent().setTitle(getResources().getString(R.string.app_name) + " [NTP; deviation="+deviationString+"sec]");
             
             modeNtp=true;
             
         } catch ( Exception e) {
             Log.e("WatchCheck", e.getMessage());
-            modeView.setText(R.string.modeLocal);
         }
         
         checkButton = (Button) findViewById(R.id.buttonCheckTime);
@@ -112,6 +96,29 @@ public class WatchCheckActivity extends Activity {
             }
         });
     }
+    
+    
+    @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
+        
+        TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
+        
+        watchToCheck.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
+        
+        GregorianCalendar now = new GregorianCalendar();
+        now.add(Calendar.MINUTE, 1);
+        
+        watchtimePicker.setCurrentHour(now.get(Calendar.HOUR_OF_DAY));
+        watchtimePicker.setCurrentMinute(now.get(Calendar.MINUTE));
+    }
+
+		
 
     protected double getNtpDelta() throws IOException {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
