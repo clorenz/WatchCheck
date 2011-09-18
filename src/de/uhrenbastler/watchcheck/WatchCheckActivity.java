@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
+import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
 import de.uhrenbastler.watchcheck.ntp.NtpMessage;
 
 /**
@@ -55,7 +56,7 @@ public class WatchCheckActivity extends Activity {
         
         TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
         
-        watchToCheck.setText(getWatchFromDatabase(selectedWatchId));
+        watchToCheck.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
 
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
         watchtimePicker.setIs24HourView(true);
@@ -172,37 +173,5 @@ public class WatchCheckActivity extends Activity {
         } else {
             return 0;
         }
-    }
-    
-    
-    private String getWatchFromDatabase(int id) {
-    	Uri selectedWatchUri = Uri.withAppendedPath(Watches.CONTENT_URI, ""+id);
-    	
-    	Log.d("WatchCheck", "Retrieving watch "+id+" from content provider with uri="+selectedWatchUri);
-    	
-    	String[] columns = new String[] { Watches._ID, Watches.NAME, Watches.SERIAL };
-    	
-    	ContentResolver cr = this.getContentResolver();
-    	Cursor cur = null;
-    	
-    	try {
-    		cur = cr.query(selectedWatchUri, columns, null, null, null);
-    	
-			if (cur.moveToFirst()) {
-				String name = null;
-				String serial = null;
-				do {
-					name = cur.getString(cur.getColumnIndex(Watches.NAME));
-					serial = cur.getString(cur.getColumnIndex(Watches.SERIAL));
-	
-					return name+"("+serial+")";
-				} while (cur.moveToNext());
-			}
-    	} finally {
-    		if ( cur !=null)
-    			cur.close();
-    	}
-			
-		return "?";
     }
 }

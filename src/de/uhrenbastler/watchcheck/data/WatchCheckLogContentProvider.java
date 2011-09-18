@@ -39,11 +39,12 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, Logs.TABLE_NAME, 2);
         
         watchesProjectionMap = new HashMap<String,String>();
+        watchesProjectionMap.put(Watches._ID, Watches._ID);
         watchesProjectionMap.put(Watches.WATCH_ID, Watches.WATCH_ID);
         watchesProjectionMap.put(Watches.NAME, Watches.NAME);
         watchesProjectionMap.put(Watches.SERIAL, Watches.SERIAL);
         watchesProjectionMap.put(Watches.DATE_CREATE, Watches.DATE_CREATE);
-        watchesProjectionMap.put(Watches.SERIAL, Watches.SERIAL);
+        watchesProjectionMap.put(Watches.COMMENT, Watches.COMMENT);
         
         logsProjectionMap = new HashMap<String,String>();
         logsProjectionMap.put(Logs.LOG_ID, Logs.LOG_ID);
@@ -261,8 +262,21 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // TODO Auto-generated method stub
-        return 0;
+    	SQLiteDatabase db = dbHelper.getWritableDatabase();
+    	int count;
+    	switch (sUriMatcher.match(uri)) {
+    		case WATCHES:
+    			count = db.update(Watches.TABLE_NAME, values, selection, selectionArgs);
+    			break;
+    		case LOGS:
+    			count = db.update(Logs.TABLE_NAME, values, selection, selectionArgs);
+    			break;
+    		default:
+    			throw new IllegalArgumentException("Unknown URI " + uri);
+    	}
+
+    	getContext().getContentResolver().notifyChange(uri, null);
+    	return count;
     }
     
     

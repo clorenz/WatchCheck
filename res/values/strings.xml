@@ -4,6 +4,8 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="deleteWatch">Are you sure, you want to delete %s and all of its logs?</string>
+    <string name="headlineAddWatch">Add watch</string>
+    <string name="headlineEditWatch">Edit watch</string>
     <string name="no">No</string>
     <string name="timeOfYourWatch">Enter the time of your watch (seconds to zero)</string>
     <string name="yes">Yes</string>
@@ -19,7 +21,6 @@
     <string name="measure">Measure</string>
     <string name="addWatch">add watch</string>
     <string name="selectWatch">select your watch</string>
-    <string name="headlineAddWatch">Add watch</string>
     <string name="addWatchModel">Model: </string>
     <string name="addWatchSerial">Serial: </string>
     <string name="addWatchRemarks">Remarks: </string>

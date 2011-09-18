@@ -22,6 +22,7 @@
         <provider android:name="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider"  android:authorities="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider"/>
         <activity android:name="LogActivity"></activity>
         <activity android:name="AddWatchActivity"></activity>
+        <activity android:name="EditWatchActivity"></activity>
         <activity android:name="SelectWatchActivity"></activity>
 
     </application>
