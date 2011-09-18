@@ -78,6 +78,13 @@ public class SelectWatchActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
+		populateListAdapter();
+	}
+
+
+
+
+	private void populateListAdapter() {
 		getAllWatchesFromDatabase();
 		
 		ListAdapter listAdapter = new WatchAdapter(this, R.layout.watch_row, watches);
@@ -168,8 +175,9 @@ public class SelectWatchActivity extends Activity {
 				       .setCancelable(false)
 				       .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
 				           public void onClick(DialogInterface dialog, int id) {
-				        	   getContentResolver().delete(Watches.CONTENT_URI, Watches.WATCH_ID, new String[] { ""+watchItem.getId()});
+				        	   getContentResolver().delete(Watches.CONTENT_URI, Watches.WATCH_ID+"="+watchItem.getId(), null);
 				        	   dialog.dismiss();
+				        	   populateListAdapter();
 				           }
 				       })
 				       .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -193,6 +201,8 @@ public class SelectWatchActivity extends Activity {
 	// ->
 	// http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
 	private void getAllWatchesFromDatabase() {
+		watches.clear();
+		
 		Uri uriWatches = Watches.CONTENT_URI;
 		String[] columns = new String[] { Watches._ID, Watches.NAME,
 				Watches.SERIAL };
