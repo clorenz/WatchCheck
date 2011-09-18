@@ -11,8 +11,7 @@ Logging:
     - NEU: Meßperiode
 
 Bugs:
-    - Select watch seems to pick the wrong watch!
+    - NTP-Devication is calculated wrong!!
 
 TODO:
-	- Select Watch: Long tap -> Possibility to edit / delete via context menu
-    - Seems, like not everywhere cursors are properly closed!!
+	- Auswertung

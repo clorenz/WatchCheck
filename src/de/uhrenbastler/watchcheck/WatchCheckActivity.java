@@ -75,7 +75,7 @@ public class WatchCheckActivity extends Activity {
                 localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
                 
                 
-                referenceTime.add(Calendar.MILLISECOND, (int)(-1000 * ntpDelta));
+                referenceTime.add(Calendar.MILLISECOND, (int)(1000 * ntpDelta));
                
                 Integer minute = watchtimePicker.getCurrentMinute();
                 Integer hour = watchtimePicker.getCurrentHour();
