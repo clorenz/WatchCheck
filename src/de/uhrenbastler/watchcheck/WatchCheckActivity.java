@@ -69,9 +69,13 @@ public class WatchCheckActivity extends Activity {
             
             @Override
             public void onClick(View v) {
-                GregorianCalendar referenceTime = new GregorianCalendar();
-                GregorianCalendar localTime = (GregorianCalendar) referenceTime.clone();
-                referenceTime.add(Calendar.SECOND, -1 * (int) ntpDelta);
+                GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
+                
+                GregorianCalendar localTime = new GregorianCalendar();
+                localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
+                
+                
+                referenceTime.add(Calendar.MILLISECOND, (int)(-1000 * ntpDelta));
                
                 Integer minute = watchtimePicker.getCurrentMinute();
                 Integer hour = watchtimePicker.getCurrentHour();
@@ -89,7 +93,7 @@ public class WatchCheckActivity extends Activity {
                 logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);
                 logIntent.putExtra(LogActivity.ATTR_WATCH_ID, selectedWatchId);
                 logIntent.putExtra(LogActivity.ATTR_MODE_NTP, modeNtp);
-                logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);
+                logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);		// Handy-Zeit
                 logIntent.putExtra(LogActivity.ATTR_NTP_TIME, modeNtp?referenceTime:null);
                 
                 startActivity(logIntent);

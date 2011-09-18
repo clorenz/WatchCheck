@@ -74,16 +74,20 @@ public class LogActivity extends Activity {
         		R.array.positions,android.R.layout.simple_spinner_item); 
         positionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         positionSpinner.setAdapter(positionAdapter); 
+        positionSpinner.setSelection(0);
         
         temperatureSpinner = (Spinner) findViewById(R.id.logSpinnerTemperature); 
         ArrayAdapter<?> temperatureAdapter = ArrayAdapter.createFromResource( this,
         		R.array.temperatures,android.R.layout.simple_spinner_item); 
         temperatureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         temperatureSpinner.setAdapter(temperatureAdapter); 
+        temperatureSpinner.setSelection(0);
         
         comment = (EditText) findViewById(R.id.logComment);
         
         startFlag = (CheckBox) findViewById(R.id.logCheckBoxNewPeriod);
+        
+        // startFlag must be checked, if there's no single log of this watch in the database!
         
         // OK button actually logs, displays an "OK" dialog, and after the dialog is acknowledged, closes
         // the activity
@@ -108,23 +112,25 @@ public class LogActivity extends Activity {
 	protected void makeLogEntry() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		
+		double ntpDiff = ((double)(ntpTime.getTimeInMillis() - localTime.getTimeInMillis())) / 1000d;
+		
 		ContentValues values = new ContentValues();
 		values.put(Logs.COMMENT, comment.getEditableText().toString());
 		values.put(Logs.DEVIATION, deviation);
 		values.put(Logs.FLAG_RESET, startFlag.isChecked());
 		values.put(Logs.LOCAL_TIMESTAMP, dateFormat.format(localTime.getTime()));
 		values.put(Logs.MODUS, modeNtp);
-		values.put(Logs.NTP_DIFF, (ntpTime.getTimeInMillis() - localTime.getTimeInMillis()) / 1000 );
-		values.put(Logs.POSITION, POSITIONARR[(int)positionSpinner.getSelectedItemId()]);
-		values.put(Logs.TEMPERATURE, TEMPARR[(int)temperatureSpinner.getSelectedItemId()]);
+		values.put(Logs.NTP_DIFF, ntpDiff);
+		if ( positionSpinner.getSelectedItemId() > 0)
+			values.put(Logs.POSITION, POSITIONARR[(int)positionSpinner.getSelectedItemId()]);
+		if ( temperatureSpinner.getSelectedItemId() > 0 )
+			values.put(Logs.TEMPERATURE, TEMPARR[(int)temperatureSpinner.getSelectedItemId()]);
 		values.put(Logs.WATCH_ID, watchId);
 		
 		
 		Log.d("WatchCheck","values="+values);
 		
 		Uri uri = getContentResolver().insert(Logs.CONTENT_URI, values);
-		
-		Log.d("WatchCheck","url="+uri);
 		
 	}
 }
