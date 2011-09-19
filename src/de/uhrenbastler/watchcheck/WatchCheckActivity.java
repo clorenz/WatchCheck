@@ -53,9 +53,11 @@ public class WatchCheckActivity extends Activity {
             ntpDelta = getNtpDelta();
             
             DecimalFormat df = new DecimalFormat("#.##");
-            String deviationString = df.format(ntpDelta);
-            if ( ntpDelta>0)
+            String deviationString = df.format(Math.abs(ntpDelta));
+            if ( ntpDelta<0)
             	deviationString = "+"+deviationString;
+            else
+            	deviationString = "-"+deviationString;
             getParent().setTitle(getResources().getString(R.string.app_name) + " [NTP; deviation="+deviationString+"sec]");
             
             modeNtp=true;
@@ -70,7 +72,7 @@ public class WatchCheckActivity extends Activity {
             @Override
             public void onClick(View v) {
                 GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
-                
+                                
                 GregorianCalendar localTime = new GregorianCalendar();
                 localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
                 
@@ -87,10 +89,10 @@ public class WatchCheckActivity extends Activity {
                 watchTime.set(Calendar.MILLISECOND,0);
                 
                 // Precision: 1/10 sec
-                deviation = (float)(watchTime.getTimeInMillis() - referenceTime.getTimeInMillis()) / 1000;
+                deviation = (float)(watchTime.getTimeInMillis() - localTime.getTimeInMillis()) / 1000;
                 
                 Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
-                logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);
+                logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);			// relative to system time
                 logIntent.putExtra(LogActivity.ATTR_WATCH_ID, selectedWatchId);
                 logIntent.putExtra(LogActivity.ATTR_MODE_NTP, modeNtp);
                 logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);		// Handy-Zeit
