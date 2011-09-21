@@ -56,6 +56,7 @@ public class WatchCheckLogContentProvider extends ContentProvider {
         logsProjectionMap.put(Logs.POSITION, Logs.POSITION);
         logsProjectionMap.put(Logs.TEMPERATURE, Logs.TEMPERATURE);
         logsProjectionMap.put(Logs.COMMENT, Logs.COMMENT);
+        logsProjectionMap.put(Logs.DEVIATION, Logs.DEVIATION);
         
     }
     

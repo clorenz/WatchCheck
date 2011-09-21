@@ -58,21 +58,21 @@ public class MainActivity extends TabActivity {
 	    // Create an Intent to launch an Activity for the tab (to be reused)
 	    intent = new Intent().setClass(this, SelectWatchActivity.class);
 	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("select").setIndicator("Select watch",
-	                      res.getDrawable(R.drawable.icon))
+	    spec = tabHost.newTabSpec("select").setIndicator("Select watch", null)
+	                      //res.getDrawable(R.drawable.icon))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
 	    // Do the same for the other tabs
 	    intent = new Intent().setClass(this, WatchCheckActivity.class);
-	    spec = tabHost.newTabSpec("check").setIndicator("Check watch",
-	                      res.getDrawable(R.drawable.icon))
+	    spec = tabHost.newTabSpec("check").setIndicator("Check watch", null)
+	                      //res.getDrawable(R.drawable.icon))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
-	    intent = new Intent().setClass(this, WatchCheckActivity.class);
-	    spec = tabHost.newTabSpec("results").setIndicator("Results",
-	                      res.getDrawable(R.drawable.icon))
+	    intent = new Intent().setClass(this, ResultsActivity.class);
+	    spec = tabHost.newTabSpec("results").setIndicator("Results", null)
+	                      //res.getDrawable(R.drawable.icon))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 

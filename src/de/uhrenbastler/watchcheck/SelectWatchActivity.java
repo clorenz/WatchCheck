@@ -35,12 +35,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -260,15 +262,36 @@ public class SelectWatchActivity extends Activity {
                     v = vi.inflate(R.layout.watch_row, null);
                 }
                 Watch w = watches.get(position);
+                TextView name=null;
+                int oldColor = -1;
+                
                 if (w != null) {
-                        TextView name = (TextView) v.findViewById(R.id.watchName);
+                        name = (TextView) v.findViewById(R.id.watchName);
                         TextView serial = (TextView) v.findViewById(R.id.watchSerial);
                         if (name != null) {
-                              name.setText(w.getName());                            }
-                        if(serial != null){
-                              serial.setText(w.getSerial());
+                              name.setText(w.getName());
+                              name.setGravity(Gravity.LEFT);
+                              oldColor = name.getCurrentTextColor();
+                        }
+                        if(serial != null && w.getSerial()!=null){
+                              serial.setText("Serial: "+w.getSerial());
                         }
                 }
+                
+                Log.d("WatchCheck","position="+position+", watches.size="+watches.size());
+                if ( position>0 && position == watches.size()-1) {
+                	Log.d("WatchCheck","Name="+name.getText());
+                	v.setBackgroundColor(getResources().getInteger(R.color.grey));
+                	if ( name != null) {
+                		name.setGravity(Gravity.CENTER);
+                		name.setTypeface(Typeface.DEFAULT_BOLD);
+                		name.setTextColor(getResources().getInteger(R.color.black));
+                	}
+                } else {
+                	v.setBackgroundColor(0);
+                	name.setTextColor(getResources().getInteger(R.color.grey));
+                }
+                
                 return v;
         }
 		
