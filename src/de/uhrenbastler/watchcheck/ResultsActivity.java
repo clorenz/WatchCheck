@@ -119,6 +119,7 @@ public class ResultsActivity extends Activity {
 						GregorianCalendar localTimestamp = new GregorianCalendar();
 						localTimestamp.setTime(dateFormat.parse(cur.getString(cur.getColumnIndex(Logs.LOCAL_TIMESTAMP))));
 						log.setLocalTimestamp(localTimestamp);
+						log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						android.util.Log.e("WatchCheck",e.getMessage());

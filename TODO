@@ -1,3 +1,8 @@
+Auswertung:
+	- Stand (täglich, immer)
+	- Gang (auf s/d, sofern nicht erster Log einer Periode)
+	- Gangabweichung (Differenz zweier Gänge)
+
 Logging:
     - Uhr
     - NTP-Delta
@@ -11,7 +16,7 @@ Logging:
     - NEU: Meßperiode
 
 Bugs:
-    - NTP-Devication is calculated wrong!!
+    - Buttons are very laggy!!! ( http://qtcstation.com/2011/01/android-handling-touch-events-making-your-buttons-more-responsive/ )
 
 TODO:
 	- Auswertung
