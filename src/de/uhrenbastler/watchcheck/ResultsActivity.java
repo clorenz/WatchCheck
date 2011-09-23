@@ -103,7 +103,7 @@ public class ResultsActivity extends Activity {
 		
 		Uri uriLogs = Logs.CONTENT_URI;
 		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID, Logs.LOCAL_TIMESTAMP,
-				Logs.DEVIATION};
+				Logs.DEVIATION, Logs.FLAG_RESET};
 
 		Cursor cur=null;
 		try {
