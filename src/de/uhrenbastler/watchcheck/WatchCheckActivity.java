@@ -15,10 +15,13 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -30,7 +33,7 @@ import de.uhrenbastler.watchcheck.ntp.NtpMessage;
  * @author clorenz
  * @created on 10.09.2011
  */
-public class WatchCheckActivity extends Activity {
+public class WatchCheckActivity extends Activity  {
     
     private Button checkButton;
     private TimePicker watchtimePicker;
@@ -71,37 +74,58 @@ public class WatchCheckActivity extends Activity {
             
             @Override
             public void onClick(View v) {
-                GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
-                                
-                GregorianCalendar localTime = new GregorianCalendar();
-                localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
-                
-                
-                referenceTime.add(Calendar.MILLISECOND, (int)(1000 * ntpDelta));
-               
-                Integer minute = watchtimePicker.getCurrentMinute();
-                Integer hour = watchtimePicker.getCurrentHour();
-                
-                GregorianCalendar watchTime = new GregorianCalendar();
-                watchTime.set(Calendar.HOUR_OF_DAY, hour);
-                watchTime.set(Calendar.MINUTE, minute);
-                watchTime.set(Calendar.SECOND,0);
-                watchTime.set(Calendar.MILLISECOND,0);
-                
-                // Precision: 1/10 sec
-                deviation = (float)(watchTime.getTimeInMillis() - localTime.getTimeInMillis()) / 1000;
-                
-                Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
-                logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);			// relative to system time
-                logIntent.putExtra(LogActivity.ATTR_WATCH_ID, selectedWatchId);
-                logIntent.putExtra(LogActivity.ATTR_MODE_NTP, modeNtp);
-                logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);		// Handy-Zeit
-                logIntent.putExtra(LogActivity.ATTR_NTP_TIME, modeNtp?referenceTime:null);
-                
+                Intent logIntent = measureAndGenerateIntent();              
                 startActivity(logIntent);
-            }
+            }	
         });
+        
+        this.checkButton.setOnTouchListener(new OnTouchListener() {			
+        	 @Override
+        	 public boolean onTouch(View v, MotionEvent event) {
+        		 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        			 Intent logIntent = measureAndGenerateIntent();              
+                     startActivity(logIntent);
+        		 }
+        		 return false;
+        	 }
+		});
     }
+    
+    
+    
+    
+    private Intent measureAndGenerateIntent() {
+		GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
+                        
+        GregorianCalendar localTime = new GregorianCalendar();
+        localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
+        
+        
+        referenceTime.add(Calendar.MILLISECOND, (int)(1000 * ntpDelta));
+       
+        Integer minute = watchtimePicker.getCurrentMinute();
+        Integer hour = watchtimePicker.getCurrentHour();
+        
+        GregorianCalendar watchTime = new GregorianCalendar();
+        watchTime.set(Calendar.HOUR_OF_DAY, hour);
+        watchTime.set(Calendar.MINUTE, minute);
+        watchTime.set(Calendar.SECOND,0);
+        watchTime.set(Calendar.MILLISECOND,0);
+        
+        // Precision: 1/10 sec
+        deviation = (float)(watchTime.getTimeInMillis() - localTime.getTimeInMillis()) / 1000;
+        
+        Intent logIntent = new Intent(WatchCheckActivity.this, LogActivity.class);
+        logIntent.putExtra(LogActivity.ATTR_DEVIATION, deviation);			// relative to system time
+        logIntent.putExtra(LogActivity.ATTR_WATCH_ID, selectedWatchId);
+        logIntent.putExtra(LogActivity.ATTR_MODE_NTP, modeNtp);
+        logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);		// Handy-Zeit
+        logIntent.putExtra(LogActivity.ATTR_NTP_TIME, modeNtp?referenceTime:null);
+        
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(100);
+		return logIntent;
+	}
     
     
     @Override

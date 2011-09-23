@@ -263,7 +263,6 @@ public class SelectWatchActivity extends Activity {
                 }
                 Watch w = watches.get(position);
                 TextView name=null;
-                int oldColor = -1;
                 
                 if (w != null) {
                         name = (TextView) v.findViewById(R.id.watchName);
@@ -271,7 +270,6 @@ public class SelectWatchActivity extends Activity {
                         if (name != null) {
                               name.setText(w.getName());
                               name.setGravity(Gravity.LEFT);
-                              oldColor = name.getCurrentTextColor();
                         }
                         if(serial != null && w.getSerial()!=null){
                               serial.setText("Serial: "+w.getSerial());
@@ -279,7 +277,7 @@ public class SelectWatchActivity extends Activity {
                 }
                 
                 Log.d("WatchCheck","position="+position+", watches.size="+watches.size());
-                if ( position>0 && position == watches.size()-1) {
+                if ( (watches.size()==1) || (position>0 && position == watches.size()-1)) {
                 	Log.d("WatchCheck","Name="+name.getText());
                 	v.setBackgroundColor(getResources().getInteger(R.color.grey));
                 	if ( name != null) {

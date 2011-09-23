@@ -50,14 +50,6 @@ public class AddWatchActivity extends Activity {
 		final EditText remarks = (EditText) findViewById(R.id.editTextRemarks);
 		
 		Button btnOk = (Button) findViewById(R.id.buttonOk);
-		Button btnCancel = (Button) findViewById(R.id.buttonCancel);
-		
-		btnCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddWatchActivity.this.finish();
-            }
-        });
 		
 		btnOk.setOnClickListener(new OnClickListener() {
 			
@@ -69,11 +61,8 @@ public class AddWatchActivity extends Activity {
 				values.put(Watches.SERIAL, serial.getEditableText().toString());
 				values.put(Watches.COMMENT, remarks.getEditableText().toString());
 				
-				Uri uri = getContentResolver().insert(Watches.CONTENT_URI, values);
-				
-				// Daten in die "Session" legen
-				// Daten in die "Konfiguration" legen
-				
+				getContentResolver().insert(Watches.CONTENT_URI, values);
+
 				AddWatchActivity.this.finish();			
 			}
 		});
