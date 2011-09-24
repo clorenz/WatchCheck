@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -41,12 +42,13 @@ public class WatchCheckActivity extends Activity  {
     private double deviation=0;
     private int selectedWatchId = -1;
     private boolean modeNtp=false;
+    private AsyncTask<Context, Integer, Integer> updateDeviation;
     
     /** Called when the activity is first created. */
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-  
+        
         setContentView(R.layout.watchcheck);
         
         watchtimePicker = (TimePicker) findViewById(R.id.TimePicker1);
@@ -94,7 +96,21 @@ public class WatchCheckActivity extends Activity  {
     
     
     
-    private Intent measureAndGenerateIntent() {
+    
+    /* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		updateDeviation.cancel(true);
+		super.onPause();
+	}
+
+
+	
+
+
+	private Intent measureAndGenerateIntent() {
 		GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
                         
         GregorianCalendar localTime = new GregorianCalendar();
@@ -146,6 +162,9 @@ public class WatchCheckActivity extends Activity  {
         
         watchtimePicker.setCurrentHour(now.get(Calendar.HOUR_OF_DAY));
         watchtimePicker.setCurrentMinute(now.get(Calendar.MINUTE));
+        
+        updateDeviation = new UpdateDeviation();
+        updateDeviation.execute(this);
     }
 
 		
@@ -211,4 +230,90 @@ public class WatchCheckActivity extends Activity  {
             return 0;
         }
     }
+    
+    
+    /**
+     * This inner class is responsible for live display of the current deviation
+     * @author clorenz
+     * @created on 24.09.2011
+     */
+    private class UpdateDeviation extends AsyncTask<Context, Integer, Integer> {
+    	
+    	boolean runnable=true;
+    	TextView currentDeviation = (TextView) findViewById(R.id.currentDeviation);
+    	double deviation=0;
+
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(Integer result) {
+			runnable=false;
+			Log.d("WatchCheck","Killed live deviation display");
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onCancelled()
+		 */
+		@Override
+		protected void onCancelled() {
+			runnable=false;
+			Log.d("WatchCheck","Killed live deviation display");
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onProgressUpdate(Progress[])
+		 */
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			String pre="+";
+			if ( deviation < 0 )
+				pre="";
+	        currentDeviation.setText(pre+new DecimalFormat("0.0").format(deviation)+" sec.");	        
+		}
+
+
+
+		@Override
+		protected Integer doInBackground(Context... params) {
+				
+			int progress=0;
+			
+			while ( runnable ) {
+				GregorianCalendar referenceTime = new GregorianCalendar();			// NTP-Zeit
+	            
+		        GregorianCalendar localTime = new GregorianCalendar();
+		        localTime.setTimeInMillis(referenceTime.getTimeInMillis());			// Handy-Zeit
+		        
+		        
+		        referenceTime.add(Calendar.MILLISECOND, (int)(1000 * ntpDelta));
+		       
+		        Integer minute = watchtimePicker.getCurrentMinute();
+		        Integer hour = watchtimePicker.getCurrentHour();
+		        
+		        GregorianCalendar watchTime = new GregorianCalendar();
+		        watchTime.set(Calendar.HOUR_OF_DAY, hour);
+		        watchTime.set(Calendar.MINUTE, minute);
+		        watchTime.set(Calendar.SECOND,0);
+		        watchTime.set(Calendar.MILLISECOND,0);
+		        
+		        // Precision: 1/10 sec
+		        deviation = (float)(watchTime.getTimeInMillis() - localTime.getTimeInMillis()) / 1000;
+		        
+		        publishProgress((++progress % 2));
+		        
+		        try {
+					Thread.sleep(333);
+				} catch (InterruptedException ignore) {
+				}
+			}
+			
+			return null;
+		}
+	};
 }

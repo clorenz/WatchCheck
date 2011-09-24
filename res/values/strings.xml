@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WatchCheck</string>
+    <string name="currentDeviation">Current deviation: </string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="deleteWatch">Are you sure, you want to delete %s and all of its logs?</string>
