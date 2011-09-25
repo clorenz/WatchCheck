@@ -35,7 +35,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -49,8 +48,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import de.uhrenbastler.watchcheck.data.Log;
 import de.uhrenbastler.watchcheck.data.Log.Logs;
-import de.uhrenbastler.watchcheck.data.Watch;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
 
 public class ResultsActivity extends Activity {
 	
@@ -176,7 +173,6 @@ public class ResultsActivity extends Activity {
                     v = vi.inflate(R.layout.result_row, null);
                 }
                 Log l = logs.get(position);
-                TextView name=null;
                 
                 if (l != null) {
                 		TextView timestampView = (TextView) v.findViewById(R.id.textViewResultTimestamp);
