@@ -5,6 +5,9 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="deleteWatch">Are you sure, you want to delete %s and all of its logs?</string>
+    <string name="headerResultDailyDeviation">Deviation</string>
+    <string name="headerResultOffset">Offset</string>
+    <string name="headerResultTimestamp">Timestamp</string>
     <string name="headlineAddWatch">Add watch</string>
     <string name="headlineEditWatch">Edit watch</string>
     <string name="no">No</string>

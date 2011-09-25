@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ** ------------------------------------------------------------------------- */
 package de.uhrenbastler.watchcheck;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,8 +57,9 @@ public class ResultsActivity extends Activity {
 	// TODO: Das muß eine List of Lists werden
 	// TODO: Oder sogar eine List of List of Lists (wenn nach Position unterschieden werden soll)
 	List<Log> results = new ArrayList<Log>();
-	
 	ListView listView;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss");
 	
 	
 	/**
@@ -106,6 +108,10 @@ public class ResultsActivity extends Activity {
 				Logs.DEVIATION, Logs.FLAG_RESET};
 
 		Cursor cur=null;
+		
+		GregorianCalendar previousTimestamp=null;
+		double previousDeviation=0;
+		
 		try {
 			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+currentWatchId, null, Logs.LOCAL_TIMESTAMP+" asc");
 
@@ -119,7 +125,21 @@ public class ResultsActivity extends Activity {
 						GregorianCalendar localTimestamp = new GregorianCalendar();
 						localTimestamp.setTime(dateFormat.parse(cur.getString(cur.getColumnIndex(Logs.LOCAL_TIMESTAMP))));
 						log.setLocalTimestamp(localTimestamp);
-						log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))));
+						log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
+								cur.isFirst());
+						if ( log.isFlagReset())
+							previousTimestamp = null;
+						
+						if ( previousTimestamp!=null) {
+							// verbrauchte Zeit berechnen
+							long timeDiffInMillis = localTimestamp.getTimeInMillis() - previousTimestamp.getTimeInMillis();
+							// Differenz der Stände berechnen
+							double deviation = log.getDeviation() - previousDeviation;	
+							// auf 24h hochrechnen
+							log.setDailyDeviation( (86400000d * deviation) / timeDiffInMillis );
+						}
+						
+						previousTimestamp = localTimestamp;
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						android.util.Log.e("WatchCheck",e.getMessage());
@@ -159,11 +179,22 @@ public class ResultsActivity extends Activity {
                 TextView name=null;
                 
                 if (l != null) {
-                        name = (TextView) v.findViewById(R.id.textViewResultTime);
-                        if (name != null) {
-                              name.setText(l.getLocalTimestamp().getTime().toString()+"="+l.getDeviation());
-                              name.setGravity(Gravity.LEFT);
-                        }
+                		TextView timestampView = (TextView) v.findViewById(R.id.textViewResultTimestamp);
+                		timestampView.setText(sdf.format(l.getLocalTimestamp().getTime()));
+                		timestampView.setGravity(Gravity.CENTER);
+                	
+                		TextView offsetView= (TextView) v.findViewById(R.id.textViewResultOffset);
+                		offsetView.setText(new DecimalFormat("+0.0s;-0.0s").format(l.getDeviation()));
+                		offsetView.setGravity(Gravity.LEFT);
+                		
+                		
+	                	TextView dailyDeviationView= (TextView) v.findViewById(R.id.textViewResultDailyDeviation);
+	                	if ( !l.isFlagReset()) {
+	                        dailyDeviationView.setText(new DecimalFormat("+0.0s/d;-0.0s/d").format(l.getDailyDeviation()));
+	                	} else {
+	                		dailyDeviationView.setText("-");
+	                	}
+	                    dailyDeviationView.setGravity(Gravity.LEFT);   
                 }
                 
                 return v;

@@ -18,6 +18,7 @@ public class Log {
 	String position;
 	int temperature;
 	String comment;
+	double dailyDeviation;
 	
     public Log() {}
     
@@ -200,9 +201,27 @@ public class Log {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-
 	
+	
+	
+
+	/**
+	 * @return the dailyDeviation
+	 */
+	public double getDailyDeviation() {
+		return dailyDeviation;
+	}
+
+
+
+	/**
+	 * @param dailyDeviation the dailyDeviation to set
+	 */
+	public void setDailyDeviation(double dailyDeviation) {
+		this.dailyDeviation = dailyDeviation;
+	}
+
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -253,4 +272,8 @@ public class Log {
         public static final String COMMENT = "comment";
     }
 
+
+
+
+	
 }
