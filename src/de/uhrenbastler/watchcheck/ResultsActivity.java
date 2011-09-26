@@ -49,10 +49,13 @@ import android.widget.TextView;
 import de.uhrenbastler.watchcheck.data.Log;
 import de.uhrenbastler.watchcheck.data.Log.Logs;
 
+// TODO: Wenn *alle* Ergebnisse einer Meßperiode mit NTP gemessen wurden, muß der NTP-Zeitstempel überall
+// bei der Referenzzeit verrechnet werden und die Resultate sollten mit einem Stern gekennzeichnet werden!
 public class ResultsActivity extends Activity {
 	
 	// TODO: Das muß eine List of Lists werden
 	// TODO: Oder sogar eine List of List of Lists (wenn nach Position unterschieden werden soll)
+	//List<PeriodResult> periodResults = new ArrayList<PeriodResult>();
 	List<Log> results = new ArrayList<Log>();
 	ListView listView;
 	
@@ -112,6 +115,8 @@ public class ResultsActivity extends Activity {
 		try {
 			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+currentWatchId, null, Logs.LOCAL_TIMESTAMP+" asc");
 
+			PeriodResult periodResult=null;
+			
 			if (cur.moveToFirst()) {
 				do {
 					Log log = new Log();
@@ -124,8 +129,16 @@ public class ResultsActivity extends Activity {
 						log.setLocalTimestamp(localTimestamp);
 						log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
 								cur.isFirst());
-						if ( log.isFlagReset())
+						if ( log.isFlagReset()) {
+							//if ( !cur.isFirst())
+							//	periodResults.add(periodResult);
+
 							previousTimestamp = null;
+							previousDeviation = 0;
+							periodResult = new PeriodResult();
+							periodResult.setReferenceStartTime(localTimestamp);
+							periodResult.setWatchStartOffset(log.getDeviation());
+						}
 						
 						if ( previousTimestamp!=null) {
 							// verbrauchte Zeit berechnen
@@ -134,9 +147,12 @@ public class ResultsActivity extends Activity {
 							double deviation = log.getDeviation() - previousDeviation;	
 							// auf 24h hochrechnen
 							log.setDailyDeviation( (86400000d * deviation) / timeDiffInMillis );
+							periodResult.setReferenceEndTime(localTimestamp);
+							periodResult.setWatchEndOffset(log.getDeviation());
 						}
 						
 						previousTimestamp = localTimestamp;
+						previousDeviation = log.getDeviation();
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						android.util.Log.e("WatchCheck",e.getMessage());
@@ -146,12 +162,17 @@ public class ResultsActivity extends Activity {
 	
 					results.add(log);
 				} while (cur.moveToNext());
+				
+				//if ( !cur.isFirst())
+				//	periodResults.add(periodResult);
 			}
 
 		} finally {
 			if ( cur !=null )
 				cur.close();
 		}
+		
+		//android.util.Log.d("WatchCheck", periodResults.toString());
 	}
 	
 	
