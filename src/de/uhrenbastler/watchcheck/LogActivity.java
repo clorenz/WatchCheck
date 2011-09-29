@@ -60,7 +60,7 @@ public class LogActivity extends Activity {
 		
 		Log.d("WatchCheck","watchId="+watchId+", deviation="+deviation
 			+", modeNtp="+modeNtp+", localTime="+localTime.getTime()
-			+", ntpTime="+ntpTime.getTime());
+			+", ntpTime="+(ntpTime!=null?ntpTime.getTime():"NULL"));
         
         setContentView(R.layout.log); 
         

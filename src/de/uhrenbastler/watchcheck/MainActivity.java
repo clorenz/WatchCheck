@@ -24,13 +24,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ** ------------------------------------------------------------------------- */
 package de.uhrenbastler.watchcheck;
 
+import java.io.FileNotFoundException;
+
+import de.uhrenbastler.watchcheck.data.ExportException;
+import de.uhrenbastler.watchcheck.data.Exporter;
+import de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider;
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class MainActivity extends TabActivity {
@@ -91,4 +104,49 @@ public class MainActivity extends TabActivity {
 	    // oder noch besser http://www.londatiga.net/how-to-create-custom-window-title-in-android/
 	    // einen Marker in die Titelbar setzen
 	}
+	
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+	
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.menuAbout: 
+        	// Show "about" dialogue
+        	PackageInfo pInfo=null;
+			try {
+				pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_META_DATA);
+			} catch (NameNotFoundException e) {}
+        	new AlertDialog.Builder(this).setTitle(this.getString(R.string.app_name)+
+        			"\nVersion: "+(pInfo!=null?pInfo.versionName:"unknown"))
+        		.setCancelable(true).setIcon(R.drawable.watchcheck)
+        		.setMessage(this.getString(R.string.app_about))
+        		.setPositiveButton(this.getString(android.R.string.ok), null).create().show();
+        	return true;
+        case R.id.menuSettings:
+        	return true;
+        case R.id.menuExportData:
+        	try {
+				String filename = new Exporter().exportWatches(this);
+				new AlertDialog.Builder(this).setTitle(this.getString(R.string.dataExported))
+					.setMessage(filename)
+					.setCancelable(true)
+					.setPositiveButton(this.getString(android.R.string.ok), null).create().show();
+			} catch (Exception e) {
+				Log.e("WatchCheck",e.getMessage());
+			}
+        	return true;
+        case R.id.menuImportData:
+        	return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
 }

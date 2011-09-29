@@ -279,7 +279,4 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
     	getContext().getContentResolver().notifyChange(uri, null);
     	return count;
     }
-    
-    
-    
 }
