@@ -112,7 +112,7 @@ public class LogActivity extends Activity {
 	protected void makeLogEntry() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		
-		double ntpDiff = ((double)(localTime.getTimeInMillis() - ntpTime.getTimeInMillis())) / 1000d;		// Really???
+		double ntpDiff = modeNtp?((double)(localTime.getTimeInMillis() - ntpTime.getTimeInMillis())) / 1000d:0;		// Really???
 		
 		ContentValues values = new ContentValues();
 		values.put(Logs.COMMENT, comment.getEditableText().toString());
