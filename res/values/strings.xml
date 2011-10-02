@@ -18,6 +18,7 @@
     <string name="no">No</string>
     <string name="settings">Settings</string>
     <string name="timeOfYourWatch">Enter the time of your watch (seconds to zero)</string>
+    <string name="warning">WARNING!</string>
     <string name="yes">Yes</string>
     <string name="OK">OK</string>
     <string name="buttonCheckTimeNtp">Measure (NTP precision)</string>
@@ -42,4 +43,5 @@
     <string name="deviation">Deviation: </string>
     <string name="zero">+- 0 sec</string>
     <string name="save">save</string>
+    <string name="reloadDatabase">You are about to drop all contents of the existing database and reload its contents with the data, found on the sdcard.\nAfterwards, the app is closed and must be restarted again!\nAre you sure?</string>
 </resources>

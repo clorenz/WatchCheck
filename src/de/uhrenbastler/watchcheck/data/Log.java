@@ -270,6 +270,18 @@ public class Log {
         public static final String TEMPERATURE = "temperature";
         
         public static final String COMMENT = "comment";
+
+		public static final String CREATE_TABLE_STATEMENT = "CREATE TABLE " + TABLE_NAME+" (" +
+                    LOG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    WATCH_ID + " INTEGER, "+
+                    MODUS + " VARCHAR(5), "+
+                    LOCAL_TIMESTAMP + " TIMESTAMP, "+
+                    NTP_DIFF + " DECIMAL(6,2), "+
+                    DEVIATION + " DECIMAL(6,2), "+
+                    FLAG_RESET + " BOOLEAN, "+
+                    POSITION + " VARCHAR(2), "+
+                    TEMPERATURE + " INTEGER, "+
+                    COMMENT + " TEXT);";
     }
 
 

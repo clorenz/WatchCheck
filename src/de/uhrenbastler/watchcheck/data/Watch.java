@@ -126,6 +126,13 @@ public class Watch {
         public static final String DATE_CREATE = "date_create";
         
         public static final String COMMENT = "comment";
+
+		public static final String CREATE_TABLE_STATEMENT = "CREATE TABLE " + TABLE_NAME+" (" +
+                    WATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    NAME + " VARCHAR(255), "+
+                    SERIAL + " VARCHAR(255), "+
+                    DATE_CREATE + " TIMESTAMP, "+
+                    COMMENT+" TEXT);";
     }
 
 

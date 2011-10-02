@@ -28,10 +28,12 @@ import java.io.FileNotFoundException;
 
 import de.uhrenbastler.watchcheck.data.ExportException;
 import de.uhrenbastler.watchcheck.data.Exporter;
+import de.uhrenbastler.watchcheck.data.Importer;
 import de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider;
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -134,7 +136,7 @@ public class MainActivity extends TabActivity {
         	return true;
         case R.id.menuExportData:
         	try {
-				String filename = new Exporter().exportWatches(this);
+				String filename = new Exporter().export(this);
 				new AlertDialog.Builder(this).setTitle(this.getString(R.string.dataExported))
 					.setMessage(filename)
 					.setCancelable(true)
@@ -144,6 +146,25 @@ public class MainActivity extends TabActivity {
 			}
         	return true;
         case R.id.menuImportData:
+        		new AlertDialog.Builder(this).setTitle(this.getString(R.string.warning))
+        		.setMessage(this.getString(R.string.reloadDatabase))
+        		.setCancelable(false)
+        		.setPositiveButton(this.getString(android.R.string.yes), 
+        				new DialogInterface.OnClickListener() {
+        	        		public void onClick(DialogInterface dialog, int which) {
+        	        			try {
+									new Importer().doImport(MainActivity.this);									
+									Intent intent = new Intent(MainActivity.this, FinActivity.class).
+										setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+									finish();
+									startActivity(intent);
+								} catch (FileNotFoundException e) {
+									Log.e("WatchCheck", e.getMessage());
+								}
+        	        		}
+        	    		})
+        		.setNegativeButton(this.getString(android.R.string.no), null)
+        		.create().show();
         	return true;
         default:
             return super.onOptionsItemSelected(item);

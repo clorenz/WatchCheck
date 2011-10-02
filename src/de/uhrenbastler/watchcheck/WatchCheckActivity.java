@@ -155,8 +155,13 @@ public class WatchCheckActivity extends Activity  {
         
         TextView watchToCheck = (TextView) findViewById(R.id.watchModel);
         
-        watchToCheck.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
-        
+        try {
+        	watchToCheck.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
+        } catch ( Exception e) {
+        	Log.w("WatchCheck","Want to access watch "+selectedWatchId+", which no longer exists in the database!");
+        	selectedWatchId=-1;
+        }
+        	
         GregorianCalendar now = new GregorianCalendar();
         now.add(Calendar.MINUTE, 1);
         

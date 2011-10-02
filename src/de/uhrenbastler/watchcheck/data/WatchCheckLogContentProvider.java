@@ -27,16 +27,18 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher;
     private static final int WATCHES = 1;
     private static final int LOGS = 2;
-    private static final int DB_VERSION = 4;
+    public static final int DB_VERSION = 4;
     private DatabaseHelper dbHelper;
     private static Map<String, String> watchesProjectionMap;
     private static Map<String, String> logsProjectionMap;
+    public static final String WATCHCHECK_DB_NAME = "watchcheck.db";
     
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(AUTHORITY, Watches.TABLE_NAME, 1);
         sUriMatcher.addURI(AUTHORITY, Watches.TABLE_NAME+"/#", 1);
         sUriMatcher.addURI(AUTHORITY, Logs.TABLE_NAME, 2);
+        sUriMatcher.addURI(AUTHORITY, "close", 3);
         
         watchesProjectionMap = new HashMap<String,String>();
         watchesProjectionMap.put(Watches._ID, Watches._ID);
@@ -63,38 +65,20 @@ public class WatchCheckLogContentProvider extends ContentProvider {
     
     private static class DatabaseHelper extends SQLiteOpenHelper {
         
-        DatabaseHelper(Context context) {
-            super(context, "watchcheck.db", null, DB_VERSION);
+        
+
+		DatabaseHelper(Context context) {
+            super(context, WATCHCHECK_DB_NAME, null, DB_VERSION);
         }
+        
 
         @Override
         public void onCreate(SQLiteDatabase db) {
             android.util.Log.d("WatchCheck","Creating databases");
             
-            db.execSQL("CREATE TABLE " + Watches.TABLE_NAME+" (" +
-                    Watches.WATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                    Watches.NAME + " VARCHAR(255), "+
-                    Watches.SERIAL + " VARCHAR(255), "+
-                    Watches.DATE_CREATE + " TIMESTAMP, "+
-                    Watches.COMMENT+" TEXT);");      
+            db.execSQL(Watches.CREATE_TABLE_STATEMENT);      
             
-            /* Beispiel: 1|1|1|2011-09-15 22:22:13|-1||-273||0|-12.5900001525879
-            	sqlite> .schema logs
-CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modus VARCHAR(5), local_timestamp TIMESTAMP, ntpDiff DECIMAL(6,2), position VARCHAR(2), temperature INTEGER, comment TEXT, reset BOOLEAN, deviation DECIMAL(6,2));
-				*/
-            
-            
-            db.execSQL("CREATE TABLE " + Logs.TABLE_NAME+" (" +
-                    Logs.LOG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                    Logs.WATCH_ID + " INTEGER, "+
-                    Logs.MODUS + " VARCHAR(5), "+
-                    Logs.LOCAL_TIMESTAMP + " TIMESTAMP, "+
-                    Logs.NTP_DIFF + " DECIMAL(6,2), "+
-                    Logs.DEVIATION + " DECIMAL(6,2), "+
-                    Logs.FLAG_RESET + " BOOLEAN, "+
-                    Logs.POSITION + " VARCHAR(2), "+
-                    Logs.TEMPERATURE + " INTEGER, "+
-                    Logs.COMMENT + " TEXT);");
+            db.execSQL(Logs.CREATE_TABLE_STATEMENT);
         }
 
         @Override
@@ -120,7 +104,7 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db=null;
-        int count;
+        int count=0;
         
         try {
         	db = dbHelper.getWritableDatabase();
@@ -136,6 +120,11 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
 	            	Log.d("WatchCheck", "Deleting logs with "+selection+"="+Arrays.toString(selectionArgs));
 	                count = db.delete(Logs.TABLE_NAME, selection, selectionArgs);
 	                break;
+	                
+	            case 3:
+	            	Log.i("WatchCheck", "Closing database");
+	            	close();
+	            	break;
 	                
 	            default:
 	                throw new IllegalArgumentException("Unknown URI " + uri);
@@ -225,11 +214,16 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
         }
     }
 
-
+    
     @Override
     public boolean onCreate() {
         dbHelper = new DatabaseHelper(getContext());
         return (dbHelper != null);
+    }
+    
+    
+    public void close() {
+    	dbHelper.close();
     }
 
 
@@ -248,6 +242,11 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
                 qb.setTables(Logs.TABLE_NAME);
                 qb.setProjectionMap(logsProjectionMap);
                 break;
+                
+            case 3:
+            	close();
+            	Log.i("WatchCheck", "Closing database");
+            	return null;
                 
             default:
                 throw new IllegalArgumentException("Unknown URI: "+uri);
@@ -272,6 +271,11 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
     		case LOGS:
     			count = db.update(Logs.TABLE_NAME, values, selection, selectionArgs);
     			break;
+    		case 3:
+    			db.close();
+    			count = -1;
+    			Log.i("WatchCheck", "Closing database");
+    			break;
     		default:
     			throw new IllegalArgumentException("Unknown URI " + uri);
     	}
@@ -279,4 +283,6 @@ CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, watch_id INTEGER, modu
     	getContext().getContentResolver().notifyChange(uri, null);
     	return count;
     }
+    
+   
 }
