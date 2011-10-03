@@ -25,11 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.uhrenbastler.watchcheck;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 import de.uhrenbastler.watchcheck.data.ExportException;
 import de.uhrenbastler.watchcheck.data.Exporter;
 import de.uhrenbastler.watchcheck.data.Importer;
 import de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;

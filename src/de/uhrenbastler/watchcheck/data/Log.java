@@ -19,6 +19,7 @@ public class Log {
 	int temperature;
 	String comment;
 	double dailyDeviation;
+	double ntpCorrectionFactor=0d;
 	
     public Log() {}
     
@@ -220,6 +221,26 @@ public class Log {
 	public void setDailyDeviation(double dailyDeviation) {
 		this.dailyDeviation = dailyDeviation;
 	}
+	
+	
+	public boolean isNtpMode() {
+		return "1".equals(modus);
+	}
+	
+	
+
+	public void setNtpCorrectionFactor(double factor) {
+		this.ntpCorrectionFactor = factor;
+	}
+
+
+	public double getNtpCorrectionFactor() {
+		return ntpCorrectionFactor;
+	}
+
+	
+
+
 
 
 
@@ -228,11 +249,13 @@ public class Log {
 	 */
 	@Override
 	public String toString() {
-		return "Log [id=" + id + ", watchId=" + watchId + ", modus=" + modus
-				+ ", localTimestamp=" + localTimestamp.getTime() + ", ntpDiff=" + ntpDiff
-				+ ", deviation=" + deviation + ", flagReset=" + flagReset
-				+ ", position=" + position + ", temperature=" + temperature
-				+ ", comment=" + comment + "]";
+		return "Log [id=" + id + "\n\twatchId=" + watchId + "\n\tmodus=" + modus
+				+ "\n\tisNtpMode="+isNtpMode()
+				+ "\n\tlocalTimestamp=" + localTimestamp.getTime() + "\n\tntpDiff=" + ntpDiff
+				+ "\n\tntpCorrectionFactor="+ntpCorrectionFactor
+				+ "\n\tdeviation=" + deviation + "\n\tflagReset=" + flagReset
+				+ "\n\tposition=" + position + "\n\ttemperature=" + temperature
+				+ "\n\tcomment=" + comment + "]";
 	}
 
 
@@ -283,6 +306,13 @@ public class Log {
                     TEMPERATURE + " INTEGER, "+
                     COMMENT + " TEXT);";
     }
+
+
+
+
+	
+
+
 
 
 

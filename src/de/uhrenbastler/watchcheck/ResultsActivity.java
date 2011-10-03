@@ -35,6 +35,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -104,13 +105,15 @@ public class ResultsActivity extends Activity {
 		results.clear();
 		
 		Uri uriLogs = Logs.CONTENT_URI;
-		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID, Logs.LOCAL_TIMESTAMP,
-				Logs.DEVIATION, Logs.FLAG_RESET};
+		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID, Logs.MODUS, Logs.LOCAL_TIMESTAMP,
+				Logs.NTP_DIFF, Logs.DEVIATION, Logs.FLAG_RESET, Logs.POSITION, Logs.TEMPERATURE,
+				Logs.COMMENT};
 
 		Cursor cur=null;
 		
 		GregorianCalendar previousTimestamp=null;
 		double previousDeviation=0;
+		Double previousNtpDiff=null;
 		
 		try {
 			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+currentWatchId, null, Logs.LOCAL_TIMESTAMP+" asc");
@@ -120,21 +123,29 @@ public class ResultsActivity extends Activity {
 			if (cur.moveToFirst()) {
 				do {
 					Log log = new Log();
+					log.setId(cur.getLong(cur.getColumnIndex(Logs._ID)));
 					log.setWatchId(currentWatchId);
+					log.setModus(cur.getString(cur.getColumnIndex(Logs.MODUS)));
+					log.setNtpDiff(cur.getDouble(cur.getColumnIndex(Logs.NTP_DIFF)));
 					log.setDeviation(cur.getFloat(cur.getColumnIndex(Logs.DEVIATION)));
+					log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
+							cur.isFirst());
+					log.setPosition(cur.getString(cur.getColumnIndex(Logs.POSITION)));
+					log.setTemperature(cur.getInt(cur.getColumnIndex(Logs.TEMPERATURE)));
+					log.setComment(cur.getString(cur.getColumnIndex(Logs.COMMENT)));
 					
 					try {
 						GregorianCalendar localTimestamp = new GregorianCalendar();
 						localTimestamp.setTime(dateFormat.parse(cur.getString(cur.getColumnIndex(Logs.LOCAL_TIMESTAMP))));
 						log.setLocalTimestamp(localTimestamp);
-						log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
-								cur.isFirst());
+						
 						if ( log.isFlagReset()) {
 							//if ( !cur.isFirst())
 							//	periodResults.add(periodResult);
 
 							previousTimestamp = null;
 							previousDeviation = 0;
+							previousNtpDiff=null;
 							periodResult = new PeriodResult();
 							periodResult.setReferenceStartTime(localTimestamp);
 							periodResult.setWatchStartOffset(log.getDeviation());
@@ -144,7 +155,11 @@ public class ResultsActivity extends Activity {
 							// verbrauchte Zeit berechnen
 							long timeDiffInMillis = localTimestamp.getTimeInMillis() - previousTimestamp.getTimeInMillis();
 							// Differenz der Stände berechnen
-							double deviation = log.getDeviation() - previousDeviation;	
+							double deviation = log.getDeviation() - previousDeviation;
+							
+							if ( previousNtpDiff!=null && log.isNtpMode() )
+								log.setNtpCorrectionFactor( (86400000d *(log.getNtpDiff()-previousNtpDiff)) / timeDiffInMillis) ;
+							
 							// auf 24h hochrechnen
 							log.setDailyDeviation( (86400000d * deviation) / timeDiffInMillis );
 							periodResult.setReferenceEndTime(localTimestamp);
@@ -153,6 +168,12 @@ public class ResultsActivity extends Activity {
 						
 						previousTimestamp = localTimestamp;
 						previousDeviation = log.getDeviation();
+						
+						if ( log.isNtpMode())
+							previousNtpDiff = log.getNtpDiff();
+						else
+							previousNtpDiff = null;
+						
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						android.util.Log.e("WatchCheck",e.getMessage());
@@ -197,12 +218,18 @@ public class ResultsActivity extends Activity {
                 
                 if (l != null) {
                 		TextView timestampView = (TextView) v.findViewById(R.id.textViewResultTimestamp);
-                		timestampView.setText(sdf.format(l.getLocalTimestamp().getTime()));
+                		timestampView.setText(sdf.format(l.getLocalTimestamp().getTime())
+                			+((l.getNtpCorrectionFactor()!=0)?"\n["+
+                					new DecimalFormat("+0.00s/d;-0.00s/d").format(l.getNtpCorrectionFactor())+"]":"")	
+                			);
                 		timestampView.setGravity(Gravity.CENTER);
+                		android.util.Log.i("WatchCheck","Log="+l);
+                		timestampView.setTypeface(l.isNtpMode()?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
                 	
                 		TextView offsetView= (TextView) v.findViewById(R.id.textViewResultOffset);
-                		offsetView.setText(new DecimalFormat("+0.0s;-0.0s").format(l.getDeviation()));
+                		offsetView.setText(new DecimalFormat("+0.0s;-0.0s").format(l.getDeviation() - l.getNtpCorrectionFactor()));
                 		offsetView.setGravity(Gravity.LEFT);
+                		offsetView.setTypeface( (l.getNtpCorrectionFactor()!=0)?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
                 		
                 		
 	                	TextView dailyDeviationView= (TextView) v.findViewById(R.id.textViewResultDailyDeviation);

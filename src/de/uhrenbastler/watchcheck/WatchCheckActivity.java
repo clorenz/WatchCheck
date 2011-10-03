@@ -138,6 +138,8 @@ public class WatchCheckActivity extends Activity  {
         logIntent.putExtra(LogActivity.ATTR_LOCAL_TIME, localTime);		// Handy-Zeit
         logIntent.putExtra(LogActivity.ATTR_NTP_TIME, modeNtp?referenceTime:null);
         
+        Log.d("WatchCheck", "modeNtp="+modeNtp);
+        
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(100);
 		return logIntent;
@@ -174,9 +176,12 @@ public class WatchCheckActivity extends Activity  {
 
 		
 
-    protected double getNtpDelta() throws IOException {
+    protected double getNtpDelta() throws IOException, NoNetworkException {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        
+        networkInfo=null;
+        
         if ( networkInfo!=null && networkInfo.isConnected()) {       
             DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(2000);
@@ -232,7 +237,7 @@ public class WatchCheckActivity extends Activity  {
             return localClockOffset;
             
         } else {
-            return 0;
+            throw new NoNetworkException("No network connection. Network info="+networkInfo);
         }
     }
     
