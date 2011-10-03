@@ -180,8 +180,6 @@ public class WatchCheckActivity extends Activity  {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         
-        networkInfo=null;
-        
         if ( networkInfo!=null && networkInfo.isConnected()) {       
             DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(2000);
