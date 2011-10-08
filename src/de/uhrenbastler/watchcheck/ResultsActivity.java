@@ -52,6 +52,7 @@ import de.uhrenbastler.watchcheck.data.Log;
 import de.uhrenbastler.watchcheck.data.Log.Logs;
 import de.uhrenbastler.watchcheck.data.Result;
 import de.uhrenbastler.watchcheck.data.WatchResult;
+import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
 
 
 public class ResultsActivity extends Activity {
@@ -78,8 +79,15 @@ public class ResultsActivity extends Activity {
 	
 	
 	private void writeHeader() {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);
+		
+		TextView resultWatchNameView = (TextView) findViewById(R.id.watchModel);
+		resultWatchNameView.setText(WatchCheckDBHelper.getWatchFromDatabase(selectedWatchId, getContentResolver()).getAsTitleString());
+		
 		TextView headerView = (TextView) findViewById(R.id.textViewResultsHeader);
-		String header = String.format(getResources().getString(R.string.resultHeader), 
+		String header = String.format(getResources().getString(R.string.resultHeader),
 				(currentPeriod+1), 
 				WatchResult.getInstance().getNumberOfResultPeriods(),
 				WatchResult.getInstance().getResultPeriod(currentPeriod).getFormattedStartDate(),
@@ -119,12 +127,11 @@ public class ResultsActivity extends Activity {
 
 	private void writeAverage() {
 		TextView average = (TextView) findViewById(R.id.textViewAverageResult);
-		String result = getString(R.string.averageResult);
 		
 		DecimalFormat resultFormat = new DecimalFormat("+#.#;-#.#");
 		
 		double averageDeviation = WatchResult.getInstance().getResultPeriod(currentPeriod).getAverageDailyDeviation();
-		average.setText(result.replaceAll("%s",
+		average.setText(String.format(getResources().getString(R.string.averageResult),
 				averageDeviation!=0.0d?resultFormat.format(averageDeviation):"+-0"));
 		
 	}

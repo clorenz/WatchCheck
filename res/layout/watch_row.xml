@@ -22,8 +22,8 @@
             android:id="@+id/watchSerial"
             android:singleLine="true"
             android:ellipsize="marquee"
-            android:textColor="@color/light_blue"
             android:textStyle="italic"
+            android:textSize="10sp"
         />
     </LinearLayout>
 </LinearLayout>

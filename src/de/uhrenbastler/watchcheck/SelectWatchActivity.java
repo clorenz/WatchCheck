@@ -271,9 +271,9 @@ public class SelectWatchActivity extends Activity {
                               name.setText(w.getName());
                               name.setGravity(Gravity.LEFT);
                         }
-                        if(serial != null && w.getSerial()!=null){
+                        if(serial != null && w.getSerial()!=null && w.getSerial().trim().length()>0){
                               serial.setText("Serial: "+w.getSerial());
-                        }
+                        } 
                 }
                 
                 Log.d("WatchCheck","position="+position+", watches.size="+watches.size());

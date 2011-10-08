@@ -3,7 +3,7 @@
 	<string name="about">About</string>
 	<string name="app_about">(C) 2011 by Christoph Lorenz, www.uhrenbastler.de.\nAll rights reserved, no warranty at all!\nUse at your own risk!</string>
     <string name="app_name">WatchCheck</string>
-    <string name="averageResult">Average deviation: %s s/day</string>
+    <string name="averageResult">Average deviation: %1$s s/day</string>
     <string name="currentDeviation">Current deviation: </string>
     <string name="dataExported">Data exported</string>
     <string name="edit">Edit</string>
