@@ -135,8 +135,6 @@ public class MainActivity extends TabActivity {
         		.setMessage(this.getString(R.string.app_about))
         		.setPositiveButton(this.getString(android.R.string.ok), null).create().show();
         	return true;
-        case R.id.menuSettings:
-        	return true;
         case R.id.menuExportData:
         	try {
 				String filename = new Exporter().export(this);

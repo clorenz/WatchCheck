@@ -27,7 +27,6 @@ package de.uhrenbastler.watchcheck;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -42,24 +41,23 @@ import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.uhrenbastler.watchcheck.data.Log;
 import de.uhrenbastler.watchcheck.data.Log.Logs;
+import de.uhrenbastler.watchcheck.data.Result;
+import de.uhrenbastler.watchcheck.data.WatchResult;
 
-// TODO: Wenn *alle* Ergebnisse einer Meßperiode mit NTP gemessen wurden, muß der NTP-Zeitstempel überall
-// bei der Referenzzeit verrechnet werden und die Resultate sollten mit einem Stern gekennzeichnet werden!
+
 public class ResultsActivity extends Activity {
 	
-	// TODO: Das muß eine List of Lists werden
-	// TODO: Oder sogar eine List of List of Lists (wenn nach Position unterschieden werden soll)
-	//List<PeriodResult> periodResults = new ArrayList<PeriodResult>();
-	List<Log> results = new ArrayList<Log>();
 	ListView listView;
-	
+	int currentPeriod=0;
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss");
 	
 	
@@ -73,9 +71,65 @@ public class ResultsActivity extends Activity {
 		super.onResume();
 		
 		populateListAdapter();
+		
+		writeHeader();
+		writeAverage();
 	}
 	
 	
+	private void writeHeader() {
+		TextView headerView = (TextView) findViewById(R.id.textViewResultsHeader);
+		String header = String.format(getResources().getString(R.string.resultHeader), 
+				(currentPeriod+1), 
+				WatchResult.getInstance().getNumberOfResultPeriods(),
+				WatchResult.getInstance().getResultPeriod(currentPeriod).getFormattedStartDate(),
+				WatchResult.getInstance().getResultPeriod(currentPeriod).getFormattedEndDate()
+		);
+		headerView.setText(header);
+		
+		((Button) findViewById(R.id.resultPrevious)).setEnabled(currentPeriod>0);
+		((Button) findViewById(R.id.resultPrevious)).setBackgroundResource(currentPeriod==0?0:android.R.drawable.ic_media_rew);
+		((Button) findViewById(R.id.resultPrevious)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if ( currentPeriod>0 ) {
+					currentPeriod--;
+					onResume();
+				}
+			}
+		});
+		
+		((Button) findViewById(R.id.resultNext)).setEnabled(currentPeriod<WatchResult.getInstance().getNumberOfResultPeriods()-1);
+		((Button) findViewById(R.id.resultNext)).setBackgroundResource(currentPeriod<WatchResult.getInstance().getNumberOfResultPeriods()-1?android.R.drawable.ic_media_ff:0);
+		((Button) findViewById(R.id.resultNext)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if ( currentPeriod<WatchResult.getInstance().getNumberOfResultPeriods() ) {
+					currentPeriod++;
+					onResume();
+				}
+			}
+		});
+		
+		android.util.Log.d("WatchCheck","RESULT="+WatchResult.getInstance());
+	}
+
+
+	private void writeAverage() {
+		TextView average = (TextView) findViewById(R.id.textViewAverageResult);
+		String result = getString(R.string.averageResult);
+		
+		DecimalFormat resultFormat = new DecimalFormat("+#.#;-#.#");
+		
+		double averageDeviation = WatchResult.getInstance().getResultPeriod(currentPeriod).getAverageDailyDeviation();
+		average.setText(result.replaceAll("%s",
+				averageDeviation!=0.0d?resultFormat.format(averageDeviation):"+-0"));
+		
+	}
+
+
 	private void populateListAdapter() {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -83,7 +137,11 @@ public class ResultsActivity extends Activity {
         
 		getLogsForCurrentWatchFromDatabase(selectedWatchId);
 		
-		ListAdapter listAdapter = new ResultsAdapter(this, R.layout.result_row, results);
+		if ( currentPeriod >= WatchResult.getInstance().getNumberOfResultPeriods() )
+			currentPeriod = WatchResult.getInstance().getNumberOfResultPeriods()-1;
+		
+		ListAdapter listAdapter = new ResultsAdapter(this, R.layout.result_row, 
+				WatchResult.getInstance().getResultPeriod(currentPeriod).getResults());
 		
 		listView.setAdapter(listAdapter);
 	}
@@ -96,24 +154,27 @@ public class ResultsActivity extends Activity {
 		setContentView(R.layout.result);
 
 		listView = (ListView) findViewById(R.id.resultListView);
+		
+		currentPeriod=99999;
 	}
 	
 	
 	
 	private void getLogsForCurrentWatchFromDatabase(int currentWatchId) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-		results.clear();
 		
 		Uri uriLogs = Logs.CONTENT_URI;
 		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID, Logs.MODUS, Logs.LOCAL_TIMESTAMP,
 				Logs.NTP_DIFF, Logs.DEVIATION, Logs.FLAG_RESET, Logs.POSITION, Logs.TEMPERATURE,
 				Logs.COMMENT};
-
+		
 		Cursor cur=null;
 		
 		GregorianCalendar previousTimestamp=null;
 		double previousDeviation=0;
 		Double previousNtpDiff=null;
+		
+		WatchResult.getInstance().clear();
 		
 		try {
 			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+currentWatchId, null, Logs.LOCAL_TIMESTAMP+" asc");
@@ -128,7 +189,7 @@ public class ResultsActivity extends Activity {
 					log.setModus(cur.getString(cur.getColumnIndex(Logs.MODUS)));
 					log.setNtpDiff(cur.getDouble(cur.getColumnIndex(Logs.NTP_DIFF)));
 					log.setDeviation(cur.getFloat(cur.getColumnIndex(Logs.DEVIATION)));
-					log.setFlagReset(Boolean.parseBoolean(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
+					log.setFlagReset("1".equals(cur.getString(cur.getColumnIndex(Logs.FLAG_RESET))) ||
 							cur.isFirst());
 					log.setPosition(cur.getString(cur.getColumnIndex(Logs.POSITION)));
 					log.setTemperature(cur.getInt(cur.getColumnIndex(Logs.TEMPERATURE)));
@@ -179,9 +240,7 @@ public class ResultsActivity extends Activity {
 						android.util.Log.e("WatchCheck",e.getMessage());
 					}
 
-					android.util.Log.d("WatchCheck", "Found log: "+log);
-	
-					results.add(log);
+					WatchResult.getInstance().addLog(log);
 				} while (cur.moveToNext());
 				
 				//if ( !cur.isFirst())
@@ -197,14 +256,14 @@ public class ResultsActivity extends Activity {
 	}
 	
 	
-	private class ResultsAdapter extends ArrayAdapter<Log> {
+	private class ResultsAdapter extends ArrayAdapter<Result> {
 		
-		private List<Log> logs;
+		private List<Result> results;
 
 		public ResultsAdapter(Context context, int textViewResourceId,
-				List<Log> logs) {
-			super(context, textViewResourceId, logs);
-			this.logs = logs;
+				List<Result> results) {
+			super(context, textViewResourceId, results);
+			this.results = results;
 		}
 		
 		@Override
@@ -214,26 +273,35 @@ public class ResultsActivity extends Activity {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(R.layout.result_row, null);
                 }
-                Log l = logs.get(position);
+                Result l = results.get(position);
                 
                 if (l != null) {
+                	
+                		/**
+                		 * 
+                		 * Vorgehen für die Zwischenergebnisse
+                		TableRow currentRow = (TableRow) v.findViewById(R.id.tableRowResult);
+                		currentRow.removeAllViews();
+                		currentRow.addView(bli bla blubb)
+                		**/
+                	
                 		TextView timestampView = (TextView) v.findViewById(R.id.textViewResultTimestamp);
-                		timestampView.setText(sdf.format(l.getLocalTimestamp().getTime())
-                			+((l.getNtpCorrectionFactor()!=0)?"\n["+
-                					new DecimalFormat("+0.00s/d;-0.00s/d").format(l.getNtpCorrectionFactor())+"]":"")	
+                		
+                		timestampView.setText(sdf.format(l.getTimestamp())
+                			+((l.getNtpDeviation()!=0)?"\n["+
+                					new DecimalFormat("+0.00s/d;-0.00s/d").format(l.getNtpDeviation())+"]":"")	
                 			);
                 		timestampView.setGravity(Gravity.CENTER);
-                		android.util.Log.i("WatchCheck","Log="+l);
-                		timestampView.setTypeface(l.isNtpMode()?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
+                		timestampView.setTypeface(l.isNtpPrecision()?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
                 	
                 		TextView offsetView= (TextView) v.findViewById(R.id.textViewResultOffset);
-                		offsetView.setText(new DecimalFormat("+0.0s;-0.0s").format(l.getDeviation() - l.getNtpCorrectionFactor()));
+                		offsetView.setText(new DecimalFormat("+0.0s;-0.0s").format(l.getOffset()));
                 		offsetView.setGravity(Gravity.LEFT);
-                		offsetView.setTypeface( (l.getNtpCorrectionFactor()!=0)?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
+                		offsetView.setTypeface( (l.isNtpPrecision())?Typeface.DEFAULT_BOLD:Typeface.DEFAULT);
                 		
                 		
 	                	TextView dailyDeviationView= (TextView) v.findViewById(R.id.textViewResultDailyDeviation);
-	                	if ( !l.isFlagReset()) {
+	                	if ( !l.isPeriodStart()) {
 	                        dailyDeviationView.setText(new DecimalFormat("+0.0s/d;-0.0s/d").format(l.getDailyDeviation()));
 	                	} else {
 	                		dailyDeviationView.setText("-");
