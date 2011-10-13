@@ -1,26 +1,39 @@
-Auswertung:
-	- Stand (täglich, immer)
-	- Gang (auf s/d, sofern nicht erster Log einer Periode)
-	- Gangabweichung (Differenz zweier Gänge)
+- Zeitauswahl sollte sich am letzten Log orientieren und den nächsten plausiblen Wert voreingestellt haben
+  (gut zu testen mit der Cosmotron, die schon 2 Minuten nachgeht...)
+- Log-Voreinstellungen für Temperatur und Position sollten sich am letzten Log orientieren
+- Einzelne Logs sollten editiert oder gelöscht werden können
+- Nach dem Anlegen eines Logs soll gleich zum neuesten Ergebnis gesprungen werden!
+  (-> http://web.archive.org/web/20100816175634/http://blog.henriklarsentoft.com/2010/07/android-tabactivity-nested-activities/ )
+- konsistentes Design (immer Überschrift, welche Uhr gerade getestet wird)
+- bessere Anleitung
+- deutsche Übersetzung
 
-Logging:
-    - Uhr
-    - NTP-Delta
-    - Modus (NTP oder lokal)
-    - Abweichung ggf. lokal
-    - Position (6 Chronometerpos + normal getragen)
-    - Temperatur (bei Chronometerpos)
-    - Anmerkung
-    - Logging-Timestamp
-
-    - NEU: Meßperiode
-
-Bugs:
-    - Buttons are very laggy!!! ( http://qtcstation.com/2011/01/android-handling-touch-events-making-your-buttons-more-responsive/ )
-
-TODO:
-	- Auswertung
-        - Möglichkeit, fehlerhafte Logs löschen / korrigieren zu können
-
-        - "Preferences"-Menü: Settings (v.a. NTP-Server), Data Export, Data Import, Legal stuff
-
+- FC:
+    java.lang.RuntimeException: Unable to resume activity {de.uhrenbastler.watchcheck/de.uhrenbastler.watchcheck.ResultsActivity}: java.lang.ArrayIndexOutOfBoundsException
+at android.app.ActivityThread.performResumeActivity(ActivityThread.java:3347)
+at android.app.LocalActivityManager.moveToState(LocalActivityManager.java:138)
+at android.app.LocalActivityManager.startActivity(LocalActivityManager.java:339)
+at android.widget.TabHost$IntentContentStrategy.getContentView(TabHost.java:651)
+at android.widget.TabHost.setCurrentTab(TabHost.java:323)
+at android.widget.TabHost$2.onTabSelectionChanged(TabHost.java:129)
+at android.widget.TabWidget$TabClickListener.onClick(TabWidget.java:453)
+at android.view.View.performClick(View.java:2408)
+at android.view.View$PerformClick.run(View.java:8817)
+at android.os.Handler.handleCallback(Handler.java:587)
+at android.os.Handler.dispatchMessage(Handler.java:92)
+at android.os.Looper.loop(Looper.java:144)
+at android.app.ActivityThread.main(ActivityThread.java:4937)
+at java.lang.reflect.Method.invokeNative(Native Method)
+at java.lang.reflect.Method.invoke(Method.java:521)
+at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:868)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:626)
+at dalvik.system.NativeStart.main(Native Method)
+Caused by: java.lang.ArrayIndexOutOfBoundsException
+at java.util.ArrayList.get(ArrayList.java:313)
+at de.uhrenbastler.watchcheck.data.WatchResult.getResultPeriod(WatchResult.java:53)
+at de.uhrenbastler.watchcheck.ResultsActivity.populateListAdapter(ResultsActivity.java:151)
+at de.uhrenbastler.watchcheck.ResultsActivity.onResume(ResultsActivity.java:74)
+at android.app.Instrumentation.callActivityOnResume(Instrumentation.java:1255)
+at android.app.Activity.performResume(Activity.java:3864)
+at android.app.ActivityThread.performResumeActivity(ActivityThread.java:3337)
+... 17 more

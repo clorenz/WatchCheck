@@ -31,6 +31,8 @@ import de.uhrenbastler.watchcheck.data.ExportException;
 import de.uhrenbastler.watchcheck.data.Exporter;
 import de.uhrenbastler.watchcheck.data.Importer;
 import de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider;
+import de.uhrenbastler.watchcheck.data.Log.Logs;
+import de.uhrenbastler.watchcheck.data.Watch.Watches;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
@@ -43,6 +45,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -60,15 +64,8 @@ public class MainActivity extends TabActivity {
 		
 		super.onCreate(savedInstanceState);
 		
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		int selectedWatchId = preferences.getInt(PREFERENCE_CURRENT_WATCH, -1);
-		
-		Log.d("WatchCheck","Selected Watch ID from preferences = "+selectedWatchId);
-		
 	    setContentView(R.layout.main);
-
-	    Resources res = getResources(); // Resource object to get Drawables
+	    
 	    TabHost tabHost = getTabHost();  // The activity TabHost
 	    TabHost.TabSpec spec;  // Resusable TabSpec for each tab
 	    Intent intent;  // Reusable Intent for each tab
@@ -93,24 +90,99 @@ public class MainActivity extends TabActivity {
 	                      //res.getDrawable(R.drawable.icon))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
+	}
+	
+	
+	
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		refreshTabs();
+	}
 
+
+
+
+	public void refreshTabs() {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int selectedWatchId = validateWatchId(preferences.getInt(PREFERENCE_CURRENT_WATCH, -1));
+		
+		Log.d("WatchCheck","Selected Watch ID from preferences = "+selectedWatchId);
+		
+		TabHost tabHost = getTabHost();
 	    // If no watch selected, disable the other tabs
 	    if ( selectedWatchId < 0) {
 	    	tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);	
 	    	tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);
 	    	tabHost.setCurrentTab(0);
 	    } else {
+	    	tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);	
 	    	// Bring "measure" tab into front
 	    	tabHost.setCurrentTab(1);
+	    	if ( !resultsAvailableForCurrentWatch(selectedWatchId))
+	    		tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);
+	    	else
+	    		tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(true);
 	    }
-	    
-	    
-	    //TODO: Idee: Hier NTP ermitteln und via http://stackoverflow.com/questions/820398/android-change-custom-title-view-at-run-time
-	    // oder noch besser http://www.londatiga.net/how-to-create-custom-window-title-in-android/
-	    // einen Marker in die Titelbar setzen
 	}
+		
+		
 	
 	
+	/**
+	 * Verify, if there are results for the selected watch
+	 * @param selectedWatchId
+	 * @return
+	 */
+	private boolean resultsAvailableForCurrentWatch(int selectedWatchId) {
+		Uri uriLogs = Logs.CONTENT_URI;
+		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID };
+		Cursor cur=null;
+		try {
+			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+selectedWatchId, null, Logs._ID);
+			if (cur.moveToFirst()) {
+				Log.d("WatchCheck","Found results for watch "+selectedWatchId);
+				return true;
+			} else {
+				Log.d("WatchCheck","NO results for watch "+selectedWatchId);
+				return false;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+	}
+
+
+	/**
+	 * Verify, that a watch with the given watchId exists
+	 * @param int1
+	 * @return
+	 */
+	private int validateWatchId(int watchIdToValidate) {
+
+		Uri uriWatches = Watches.CONTENT_URI;
+		String[] columns = new String[] { Watches._ID };
+		Cursor cur=null;
+		try {
+			cur = managedQuery(uriWatches, columns, Watches._ID+"="+watchIdToValidate, null, Watches._ID);
+			if (cur.moveToFirst()) {
+				return watchIdToValidate;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+		
+		Log.w("WatchCheck","No watch with ID "+watchIdToValidate+" found in database!");
+		return -1;
+	}
+
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

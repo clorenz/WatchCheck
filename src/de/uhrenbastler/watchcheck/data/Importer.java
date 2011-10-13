@@ -33,6 +33,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Environment;
@@ -92,7 +93,7 @@ public class Importer {
 			android.util.Log.e("WatchCheck","Could not delete "+WatchCheckLogContentProvider.WATCHCHECK_DB_NAME);
 		
 		SQLiteDatabase sqlDb = act.openOrCreateDatabase(WatchCheckLogContentProvider.WATCHCHECK_DB_NAME, 
-				act.MODE_WORLD_WRITEABLE, null);
+				Context.MODE_WORLD_WRITEABLE, null);
 
 		sqlDb.setVersion(WatchCheckLogContentProvider.DB_VERSION);
 		

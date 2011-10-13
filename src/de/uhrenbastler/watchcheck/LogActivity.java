@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,7 +101,10 @@ public class LogActivity extends Activity {
             @Override
             public void onClick(View v) {
             	makeLogEntry();
-                LogActivity.this.finish();       
+            	
+                LogActivity.this.finish();  
+                
+                startActivity(new Intent(LogActivity.this, ResultsActivity.class));
             }
         });
         

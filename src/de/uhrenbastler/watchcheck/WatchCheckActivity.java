@@ -95,8 +95,6 @@ public class WatchCheckActivity extends Activity  {
     
     
     
-    
-    
     /* (non-Javadoc)
 	 * @see android.app.Activity#onPause()
 	 */
@@ -151,6 +149,9 @@ public class WatchCheckActivity extends Activity  {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
+		MainActivity mainActivity = (MainActivity) getParent();
+		mainActivity.refreshTabs();
+        
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		selectedWatchId = preferences.getInt(MainActivity.PREFERENCE_CURRENT_WATCH, -1);

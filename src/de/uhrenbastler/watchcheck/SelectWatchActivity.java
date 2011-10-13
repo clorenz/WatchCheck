@@ -125,6 +125,10 @@ public class SelectWatchActivity extends Activity {
 					editor.putInt(MainActivity.PREFERENCE_CURRENT_WATCH, (int)watches.get((int)id).getId());
 					editor.commit();
 					
+					MainActivity mainActivity = (MainActivity) getParent();
+					mainActivity.refreshTabs();
+					
+					/*
 					TabHost tabHost = ((TabActivity) getParent()).getTabHost();
 					tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);	
 			    	tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(true);
@@ -133,6 +137,7 @@ public class SelectWatchActivity extends Activity {
 			    	
 			    	// Bring "check" tab to front
 			    	tabHost.setCurrentTab(1);
+			    	*/
 				}
 			}
 		});
