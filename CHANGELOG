@@ -1,0 +1,5 @@
+1.1 : - Internal refactoring
+
+1.0.1 : - Using proguard for smaller app footprint
+	    - Fixed ForceClose when no watches and/or no logs were present, but the result
+		  tab was selected
