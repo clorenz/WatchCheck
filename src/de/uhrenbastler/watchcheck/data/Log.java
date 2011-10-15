@@ -1,13 +1,18 @@
 package de.uhrenbastler.watchcheck.data;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 
-public class Log {
+public class Log implements Serializable {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -6533940264730427036L;
 	long id;
 	long watchId;
 	String modus;
@@ -251,7 +256,8 @@ public class Log {
 	public String toString() {
 		return "Log [id=" + id + "\n\twatchId=" + watchId + "\n\tmodus=" + modus
 				+ "\n\tisNtpMode="+isNtpMode()
-				+ "\n\tlocalTimestamp=" + localTimestamp.getTime() + "\n\tntpDiff=" + ntpDiff
+				+ "\n\tlocalTimestamp=" + (localTimestamp!=null?localTimestamp.getTime():"null")
+				+ "\n\tntpDiff=" + ntpDiff
 				+ "\n\tntpCorrectionFactor="+ntpCorrectionFactor
 				+ "\n\tdeviation=" + deviation + "\n\tflagReset=" + flagReset
 				+ "\n\tposition=" + position + "\n\ttemperature=" + temperature

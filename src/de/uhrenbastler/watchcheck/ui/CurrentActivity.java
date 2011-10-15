@@ -22,14 +22,34 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ** ------------------------------------------------------------------------- */
-package de.uhrenbastler.watchcheck.data;
+package de.uhrenbastler.watchcheck.ui;
 
-public class ExportException extends Exception {
+public class CurrentActivity {
+	
+	private static CurrentActivity _instance = new CurrentActivity();
+	private String current = null;
+	
+	private CurrentActivity() {
+	}
+	
+	public static CurrentActivity getInstance() {
+		return _instance;
+	}
 
 	/**
-	 * Comment for <code>serialVersionUID</code>
+	 * @return the current
 	 */
-	static final long serialVersionUID = -5043709263541258578L;
+	public String getCurrent() {
+		return current;
+	}
 
+	/**
+	 * @param current the current to set
+	 */
+	public void setCurrent(String current) {
+		this.current = current;
+	}
+	
+	
 
 }

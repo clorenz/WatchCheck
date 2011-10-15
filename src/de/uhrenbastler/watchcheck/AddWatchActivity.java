@@ -26,13 +26,16 @@ package de.uhrenbastler.watchcheck;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
+import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
+import de.uhrenbastler.watchcheck.ui.MainActivity;
 
 public class AddWatchActivity extends Activity {
 
@@ -62,7 +65,13 @@ public class AddWatchActivity extends Activity {
 				values.put(Watches.COMMENT, remarks.getEditableText().toString());
 				
 				getContentResolver().insert(Watches.CONTENT_URI, values);
-
+				
+				int latestWatchId = WatchCheckDBHelper.getLatestWatchId(AddWatchActivity.this);
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(AddWatchActivity.this);
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.putInt(MainActivity.PREFERENCE_CURRENT_WATCH, latestWatchId);
+				editor.commit();
+				
 				AddWatchActivity.this.finish();			
 			}
 		});

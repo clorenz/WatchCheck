@@ -22,42 +22,44 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ** ------------------------------------------------------------------------- */
-package de.uhrenbastler.watchcheck;
+package de.uhrenbastler.watchcheck.ui;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 
-import de.uhrenbastler.watchcheck.data.ExportException;
-import de.uhrenbastler.watchcheck.data.Exporter;
-import de.uhrenbastler.watchcheck.data.Importer;
-import de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider;
-import de.uhrenbastler.watchcheck.data.Log.Logs;
-import de.uhrenbastler.watchcheck.data.Watch.Watches;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TabHost;
+import de.uhrenbastler.watchcheck.FinActivity;
+import de.uhrenbastler.watchcheck.R;
+import de.uhrenbastler.watchcheck.ResultsActivity;
+import de.uhrenbastler.watchcheck.SelectWatchActivity;
+import de.uhrenbastler.watchcheck.data.Exporter;
+import de.uhrenbastler.watchcheck.data.Importer;
+import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
+import de.uhrenbastler.watchcheck.tools.Logger;
 
+/**
+ * The main activity: Tab framework and menu
+ * @author clorenz
+ * @created on 14.10.2011
+ */
 public class MainActivity extends TabActivity {
 	
 	public static final String PREFERENCE_CURRENT_WATCH = "currentWatch";
+	public static final String SPEC_SELECT = "select";
+	public static final String SPEC_CHECK = "check";
+	public static final String SPEC_RESULTS = "results";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,30 +68,14 @@ public class MainActivity extends TabActivity {
 		
 	    setContentView(R.layout.main);
 	    
-	    TabHost tabHost = getTabHost();  // The activity TabHost
-	    TabHost.TabSpec spec;  // Resusable TabSpec for each tab
-	    Intent intent;  // Reusable Intent for each tab
-
-	    // Create an Intent to launch an Activity for the tab (to be reused)
-	    intent = new Intent().setClass(this, SelectWatchActivity.class);
-	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("select").setIndicator("Select watch", null)
-	                      //res.getDrawable(R.drawable.icon))
-	                  .setContent(intent);
-	    tabHost.addTab(spec);
-
-	    // Do the same for the other tabs
-	    intent = new Intent().setClass(this, WatchCheckActivity.class);
-	    spec = tabHost.newTabSpec("check").setIndicator("Check watch", null)
-	                      //res.getDrawable(R.drawable.icon))
-	                  .setContent(intent);
-	    tabHost.addTab(spec);
-
-	    intent = new Intent().setClass(this, ResultsActivity.class);
-	    spec = tabHost.newTabSpec("results").setIndicator("Results", null)
-	                      //res.getDrawable(R.drawable.icon))
-	                  .setContent(intent);
-	    tabHost.addTab(spec);
+	    TabHost tabHost = getTabHost();
+	    
+	    tabHost.addTab(tabHost.newTabSpec(SPEC_SELECT).setIndicator(getString(R.string.selectWatch)).setContent(
+	                    new Intent(this, SelectWatchActivity.class)));
+	    tabHost.addTab(tabHost.newTabSpec(SPEC_CHECK).setIndicator(getString(R.string.checkWatch)).setContent(
+                new Intent(this, CheckWatchActivity.class)));
+	    tabHost.addTab(tabHost.newTabSpec(SPEC_RESULTS).setIndicator(getString(R.string.results)).setContent(
+                new Intent(this, ResultsActivity.class)));
 	}
 	
 	
@@ -97,7 +83,6 @@ public class MainActivity extends TabActivity {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		
 		refreshTabs();
@@ -109,9 +94,9 @@ public class MainActivity extends TabActivity {
 	public void refreshTabs() {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		int selectedWatchId = validateWatchId(preferences.getInt(PREFERENCE_CURRENT_WATCH, -1));
+		int selectedWatchId = WatchCheckDBHelper.validateWatchId(this,preferences.getInt(PREFERENCE_CURRENT_WATCH, -1));
 		
-		Log.d("WatchCheck","Selected Watch ID from preferences = "+selectedWatchId);
+		Logger.debug("Selected Watch ID from preferences = "+selectedWatchId);
 		
 		TabHost tabHost = getTabHost();
 	    // If no watch selected, disable the other tabs
@@ -123,65 +108,19 @@ public class MainActivity extends TabActivity {
 	    	tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);	
 	    	// Bring "measure" tab into front
 	    	tabHost.setCurrentTab(1);
-	    	if ( !resultsAvailableForCurrentWatch(selectedWatchId))
+	    	if ( !WatchCheckDBHelper.resultsAvailableForCurrentWatch(this,selectedWatchId))
 	    		tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(false);
 	    	else
 	    		tabHost.getTabWidget().getChildTabViewAt(2).setEnabled(true);
 	    }
 	}
-		
-		
 	
 	
-	/**
-	 * Verify, if there are results for the selected watch
-	 * @param selectedWatchId
-	 * @return
-	 */
-	private boolean resultsAvailableForCurrentWatch(int selectedWatchId) {
-		Uri uriLogs = Logs.CONTENT_URI;
-		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID };
-		Cursor cur=null;
-		try {
-			cur = managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+selectedWatchId, null, Logs._ID);
-			if (cur.moveToFirst()) {
-				Log.d("WatchCheck","Found results for watch "+selectedWatchId);
-				return true;
-			} else {
-				Log.d("WatchCheck","NO results for watch "+selectedWatchId);
-				return false;
-			}
-		} finally {
-			if ( cur !=null )
-				cur.close();
-		}
+	public void displayResultTab() {
+		TabHost tabHost = getTabHost();
+		tabHost.setCurrentTab(2);
 	}
-
-
-	/**
-	 * Verify, that a watch with the given watchId exists
-	 * @param int1
-	 * @return
-	 */
-	private int validateWatchId(int watchIdToValidate) {
-
-		Uri uriWatches = Watches.CONTENT_URI;
-		String[] columns = new String[] { Watches._ID };
-		Cursor cur=null;
-		try {
-			cur = managedQuery(uriWatches, columns, Watches._ID+"="+watchIdToValidate, null, Watches._ID);
-			if (cur.moveToFirst()) {
-				return watchIdToValidate;
-			}
-		} finally {
-			if ( cur !=null )
-				cur.close();
-		}
 		
-		Log.w("WatchCheck","No watch with ID "+watchIdToValidate+" found in database!");
-		return -1;
-	}
-
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -215,7 +154,7 @@ public class MainActivity extends TabActivity {
 					.setCancelable(true)
 					.setPositiveButton(this.getString(android.R.string.ok), null).create().show();
 			} catch (Exception e) {
-				Log.e("WatchCheck",e.getMessage());
+				Logger.error(e.getMessage(),e);
 			}
         	return true;
         case R.id.menuImportData:
@@ -232,7 +171,7 @@ public class MainActivity extends TabActivity {
 									finish();
 									startActivity(intent);
 								} catch (FileNotFoundException e) {
-									Log.e("WatchCheck", e.getMessage());
+									Logger.error(e.getMessage(),e);
 								}
         	        		}
         	    		})

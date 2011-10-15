@@ -29,7 +29,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,10 +54,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
 import android.widget.TextView;
 import de.uhrenbastler.watchcheck.data.Watch;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
+import de.uhrenbastler.watchcheck.ui.MainActivity;
 
 /**
  * @see http://www.softwarepassion.com/android-series-custom-listview-items-and-adapters/

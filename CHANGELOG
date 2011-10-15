@@ -1,4 +1,11 @@
-1.1 : - Internal refactoring
+1.1 : - NTP-status is shown in colors
+      - Probabilistic prefilling of the time picker
+      - Log in a more use-friendly dialog now
+	  - Probablistic prefilling of log dialog data
+	  - Display result after saving the log
+      - Jump to last result entry
+      - Fixed Android 2.1 compatibility issues
+      - Internal refactoring
 
 1.0.1 : - Using proguard for smaller app footprint
 	    - Fixed ForceClose when no watches and/or no logs were present, but the result

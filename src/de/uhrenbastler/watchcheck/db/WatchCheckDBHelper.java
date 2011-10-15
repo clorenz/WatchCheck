@@ -24,19 +24,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ** ------------------------------------------------------------------------- */
 package de.uhrenbastler.watchcheck.db;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
+import de.uhrenbastler.watchcheck.data.Log;
 import de.uhrenbastler.watchcheck.data.Watch;
+import de.uhrenbastler.watchcheck.data.Log.Logs;
 import de.uhrenbastler.watchcheck.data.Watch.Watches;
+import de.uhrenbastler.watchcheck.tools.Logger;
 
 public class WatchCheckDBHelper {
 	
 	public static Watch getWatchFromDatabase(long id, ContentResolver cr) {
     	Uri selectedWatchUri = Uri.withAppendedPath(Watches.CONTENT_URI, ""+id);
     	
-    	Log.d("WatchCheck", "Retrieving watch "+id+" from content provider with uri="+selectedWatchUri);
+    	Logger.debug("Retrieving watch "+id+" from content provider with uri="+selectedWatchUri);
     	
     	String[] columns = new String[] { Watches._ID, Watches.NAME, Watches.SERIAL, Watches.COMMENT };
     	
@@ -66,5 +69,100 @@ public class WatchCheckDBHelper {
 			
 		return null;
     }
+	
+	
+	
+	/**
+	 * Verify, if there are results for the selected watch
+	 * @param selectedWatchId
+	 * @return
+	 */
+	public static boolean resultsAvailableForCurrentWatch(Activity activity, int selectedWatchId) {
+		Uri uriLogs = Logs.CONTENT_URI;
+		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID };
+		Cursor cur=null;
+		try {
+			cur = activity.managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+selectedWatchId, null, Logs._ID);
+			if (cur.moveToFirst()) {
+				Logger.debug("Found results for watch "+selectedWatchId);
+				return true;
+			} else {
+				Logger.debug("NO results for watch "+selectedWatchId);
+				return false;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+	}
+	
+	
+	/**
+	 * Verify, that a watch with the given watchId exists
+	 * @param int1
+	 * @return
+	 */
+	public static int validateWatchId(Activity activity, int watchIdToValidate) {
+
+		Uri uriWatches = Watches.CONTENT_URI;
+		String[] columns = new String[] { Watches._ID };
+		Cursor cur=null;
+		try {
+			cur = activity.managedQuery(uriWatches, columns, Watches._ID+"="+watchIdToValidate, null, Watches._ID);
+			if (cur.moveToFirst()) {
+				return watchIdToValidate;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+		
+		Logger.warn("No watch with ID "+watchIdToValidate+" found in database!");
+		return -1;
+	}
+
+
+
+	public static Log getLastLogOfWatch(Activity activity, int watchId) {
+		Uri uriLogs = Logs.CONTENT_URI;
+		String[] columns = new String[] { Logs._ID, Logs.WATCH_ID, Logs.DEVIATION, Logs.POSITION, Logs.TEMPERATURE };
+		
+		Cursor cur=null;
+		try {
+			cur = activity.managedQuery(uriLogs, columns, Logs.WATCH_ID+"="+watchId, null, Logs._ID+" DESC");
+			if (cur.moveToFirst()) {
+				Log log = new Log();
+				log.setDeviation(cur.getDouble(cur.getColumnIndex(Logs.DEVIATION)));
+				log.setPosition(cur.getString(cur.getColumnIndex(Logs.POSITION)));
+				log.setTemperature(cur.getInt(cur.getColumnIndex(Logs.TEMPERATURE)));
+				return log;
+			} else {
+				return null;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+	}
+
+
+
+	public static int getLatestWatchId(Activity activity) {
+		Uri uriWatches = Watches.CONTENT_URI;
+		String[] columns = new String[] { Watches._ID };
+		
+		Cursor cur=null;
+		try {
+			cur = activity.managedQuery(uriWatches, columns, null, null, Logs._ID+" DESC");
+			if (cur.moveToFirst()) {
+				return cur.getInt(cur.getColumnIndex(Watches._ID));
+			} else {
+				return -1;
+			}
+		} finally {
+			if ( cur !=null )
+				cur.close();
+		}
+	}
 
 }

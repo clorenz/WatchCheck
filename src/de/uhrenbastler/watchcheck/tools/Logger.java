@@ -22,14 +22,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ** ------------------------------------------------------------------------- */
-package de.uhrenbastler.watchcheck.data;
+package de.uhrenbastler.watchcheck.tools;
 
-public class ExportException extends Exception {
+import android.util.Log;
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	static final long serialVersionUID = -5043709263541258578L;
-
+/**
+ * Wrapper class for consistent logging
+ * @author clorenz
+ * @created on 14.10.2011
+ */
+public class Logger {
+	
+	public static final String TAG="WatchCheck";
+	
+	public static void debug(String message) {
+		Log.d(TAG, message);
+	}
+	
+	public static void info(String message) {
+		Log.i(TAG, message);
+	}
+	
+	public static void warn(String message) {
+		Log.w(TAG, message);
+	}
+	
+	public static void error(String message, Throwable t) {
+		Log.e(TAG, message, t);
+	}
 
 }
