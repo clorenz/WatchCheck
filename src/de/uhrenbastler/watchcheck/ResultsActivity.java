@@ -53,6 +53,7 @@ import de.uhrenbastler.watchcheck.data.Log.Logs;
 import de.uhrenbastler.watchcheck.data.Result;
 import de.uhrenbastler.watchcheck.data.WatchResult;
 import de.uhrenbastler.watchcheck.db.WatchCheckDBHelper;
+import de.uhrenbastler.watchcheck.ui.MainActivity;
 
 
 public class ResultsActivity extends Activity {
@@ -147,10 +148,19 @@ public class ResultsActivity extends Activity {
 		if ( currentPeriod >= WatchResult.getInstance().getNumberOfResultPeriods() )
 			currentPeriod = WatchResult.getInstance().getNumberOfResultPeriods()-1;
 		
-		ListAdapter listAdapter = new ResultsAdapter(this, R.layout.result_row, 
+		final ListAdapter listAdapter = new ResultsAdapter(this, R.layout.result_row, 
 				WatchResult.getInstance().getResultPeriod(currentPeriod).getResults());
 		
 		listView.setAdapter(listAdapter);
+		
+		// Jump to the last entry
+		listView.post(new Runnable() {
+	        @Override
+	        public void run() {
+	        	listView.setSelection(listAdapter.getCount() - 1);
+	        }
+	    });
+
 	}
 	
 	
