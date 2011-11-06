@@ -46,6 +46,7 @@ import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -150,6 +151,7 @@ public class CheckWatchActivity extends Activity {
 	@Override
 	protected void onPause() {
 		updateDeviation.cancel(true);
+		((MainActivity)getParent()).releaseKeepScreenOn();
 		super.onPause();
 	}
 	
@@ -192,6 +194,8 @@ public class CheckWatchActivity extends Activity {
         
         updateDeviation = new UpdateDeviation();
         updateDeviation.execute(this);
+        
+        ((MainActivity)getParent()).setKeepScreenOn();
     }
 	
 	
@@ -237,7 +241,7 @@ public class CheckWatchActivity extends Activity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         
-        if ( networkInfo!=null && networkInfo.isConnected()) {       
+        if ( networkInfo!=null && networkInfo.isConnected()) {
             DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(2000);
             InetAddress address = InetAddress.getByName("europe.pool.ntp.org");

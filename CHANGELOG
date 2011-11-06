@@ -1,3 +1,6 @@
+1.2 : - Fixed bug in prefilling the log dialog
+      - Measuring screen stays awake 
+
 1.1 : - NTP-status is shown in colors
       - Probabilistic prefilling of the time picker
       - Log in a more use-friendly dialog now

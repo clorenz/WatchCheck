@@ -26,8 +26,9 @@ package de.uhrenbastler.watchcheck.ui;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -47,7 +48,7 @@ import de.uhrenbastler.watchcheck.tools.Logger;
 
 public class LogDialog extends Dialog {
 	
-	private static final String[] POSITIONARR = { "", "DU", "DD", "0U", "3U", "6U", "9U" };
+	private static final String[] POSITIONARR = { "","DU","DD","0U","3U","6U","9U" };
 	private static final int[] TEMPARR = { -273, 4, 20, 36 };
 	boolean saved =false;
 	private int watchId;
@@ -110,7 +111,7 @@ public class LogDialog extends Dialog {
         positionSpinner.setAdapter(positionAdapter); 
         
         if ( lastLog!=null && lastLog.getPosition()!=null)
-        	positionSpinner.setSelection(Arrays.binarySearch(POSITIONARR, lastLog.getPosition()));
+        	positionSpinner.setSelection(ArrayUtils.indexOf(POSITIONARR, lastLog.getPosition()));
         else
         	positionSpinner.setSelection(0);
         
@@ -121,7 +122,7 @@ public class LogDialog extends Dialog {
         temperatureSpinner.setAdapter(temperatureAdapter); 
         
         if ( lastLog!=null  )
-        	temperatureSpinner.setSelection(Arrays.binarySearch(TEMPARR, lastLog.getTemperature()));
+        	temperatureSpinner.setSelection(ArrayUtils.indexOf(TEMPARR, lastLog.getTemperature()));
         else
         	temperatureSpinner.setSelection(0);
         
@@ -163,6 +164,7 @@ public class LogDialog extends Dialog {
 		values.put(Logs.LOCAL_TIMESTAMP, dateFormat.format(localTime.getTime()));
 		values.put(Logs.MODUS, modeNtp);
 		values.put(Logs.NTP_DIFF, ntpDiff);
+		
 		if ( positionSpinner.getSelectedItemId() > 0)
 			values.put(Logs.POSITION, POSITIONARR[(int)positionSpinner.getSelectedItemId()]);
 		if ( temperatureSpinner.getSelectedItemId() > 0 )

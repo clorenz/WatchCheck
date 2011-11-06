@@ -39,6 +39,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager.LayoutParams;
 import android.widget.TabHost;
 import de.uhrenbastler.watchcheck.FinActivity;
 import de.uhrenbastler.watchcheck.R;
@@ -89,6 +90,14 @@ public class MainActivity extends TabActivity {
 	}
 
 
+	public void setKeepScreenOn() {
+		getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+	
+	
+	public void releaseKeepScreenOn() {
+		getWindow().clearFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
 
 
 	public void refreshTabs() {

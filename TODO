@@ -1,7 +1,6 @@
 - Einzelne Logs sollten editiert oder gelöscht werden können
 - CheckWatchActivity: ModeNTP könnte im Hintergrund überwacht werden
 - BACK aus Result sollte entweder eine Meldung bringen, oder auf die mittlere Action gehen!
-- Screenlock muß ausgeschaltet werden
 - Komplette Perioden sollen gelöscht werden können
 - Was passiert eigentlich, wenn man eine Uhr entfernt? Werden dann
   (kaskadierend) auch die Logs gelöscht?
@@ -9,3 +8,5 @@
   vollen Minute??), und evtl. auch Anzeige der NTP-Zeit.
 - bessere Anleitung
 - deutsche Übersetzung
+- Graphische Anzeige
+- Bug: Wenn eine Uhr gelöscht wird, werden die Logs dieser Uhr nicht gelöscht!
