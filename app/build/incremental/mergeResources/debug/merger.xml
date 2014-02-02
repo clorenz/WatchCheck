@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res" >
+            <file
+                name="watchcheck"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-hdpi/watchcheck.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="icon"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-hdpi/icon.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="watchcheck"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-mdpi/watchcheck.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="icon"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-mdpi/icon.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="cm_select_watch"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/menu/cm_select_watch.xml"
+                qualifiers=""
+                type="menu" />
+            <file
+                name="main_menu"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/menu/main_menu.xml"
+                qualifiers=""
+                type="menu" />
+            <file
+                name="watchcheck"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-ldpi/watchcheck.png"
+                qualifiers="ldpi"
+                type="drawable" />
+            <file
+                name="icon"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/drawable-ldpi/icon.png"
+                qualifiers="ldpi"
+                type="drawable" />
+            <file
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/strings.xml"
+                qualifiers="" >
+                <string name="addWatchRemarks" >Remarks: 
+                </string>
+                <string name="buttonCheckTimeLocal" >Measure (local precision)
+                </string>
+                <string name="selectWatch" >Select watch
+                </string>
+                <string name="OK" >OK
+                </string>
+                <string name="modeNtp" >NTP (Deviation: %s sec)
+                </string>
+                <string name="position" >Position: 
+                </string>
+                <string name="cancel" >Cancel
+                </string>
+                <string name="buttnLog" >Log
+                </string>
+                <string name="yes" >Yes
+                </string>
+                <string name="averageResult" >Average deviation: %1$s s/day
+                </string>
+                <string name="addWatchModel" >Model: 
+                </string>
+                <string name="edit" >Edit
+                </string>
+                <string name="addWatchSerial" >Serial: 
+                </string>
+                <string name="reloadDatabase" >You are about to drop all contents of the existing database and reload its contents with the data, found on the sdcard.\nAfterwards, the app is closed and must be restarted again!\nAre you sure?
+                </string>
+                <string name="headlineEditWatch" >Edit watch
+                </string>
+                <string name="modeLocal" >Local time (not precise!)
+                </string>
+                <string name="about" >About
+                </string>
+                <string name="checkWatch" >Check watch
+                </string>
+                <string name="exportData" >Export data
+                </string>
+                <string name="importData" >Import data
+                </string>
+                <string name="deleteWatch" >Are you sure, you want to delete %s and all of its logs?
+                </string>
+                <string name="timeOfYourWatch" >Enter the time of your watch (seconds to zero)
+                </string>
+                <string name="resultHeader" >Period %1$d/%2$d\n(%3$s - %4$s)
+                </string>
+                <string name="app_about" >(C) 2011 by Christoph Lorenz, www.uhrenbastler.de.\nAll rights reserved, no warranty at all!\nUse at your own risk!
+                </string>
+                <string name="mode" >Measure mode: 
+                </string>
+                <string name="currentDeviation" >Current deviation: 
+                </string>
+                <string name="enterLog" >Enter Log Data
+                </string>
+                <string name="headlineAddWatch" >Add watch
+                </string>
+                <string name="measure" >Measure
+                </string>
+                <string name="warning" >WARNING!
+                </string>
+                <string name="comment" >Comment: 
+                </string>
+                <string name="zero" >+- 0 sec
+                </string>
+                <string name="buttonCheckTimeNtp" >Measure (NTP precision)
+                </string>
+                <string name="headlineLog" >Log
+                </string>
+                <string name="save" >save
+                </string>
+                <string name="app_name" >WatchCheck
+                </string>
+                <string name="deviation" >Deviation: 
+                </string>
+                <string name="results" >Results
+                </string>
+                <string name="headerResultOffset" >Offset
+                </string>
+                <string name="watch" >Watch to check: 
+                </string>
+                <string name="addWatch" >add watch
+                </string>
+                <string name="no" >No
+                </string>
+                <string name="dataExported" >Data exported
+                </string>
+                <string name="delete" >Delete
+                </string>
+                <string name="newPeriod" >New measure period: 
+                </string>
+                <string name="temperature" >Temperature: 
+                </string>
+                <string name="headerResultTimestamp" >Timestamp
+                </string>
+                <string name="headerResultDailyDeviation" >Deviation
+                </string>
+            </file>
+            <file
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/arrays.xml"
+                qualifiers="" >
+                <string-array name="temperatures" >
+                    <item>
+skin
+                    </item>
+                    <item>
++4°
+                    </item>
+                    <item>
++20°
+                    </item>
+                    <item>
++36°
+                    </item>
+                </string-array>
+                <string-array name="positions" >
+                    <item>
+worn
+                    </item>
+                    <item>
+horizontal, dial up
+                    </item>
+                    <item>
+horizontal, dial down
+                    </item>
+                    <item>
+vertical, 12 up
+                    </item>
+                    <item>
+vertical, 3 up
+                    </item>
+                    <item>
+vertical, 6 up
+                    </item>
+                    <item>
+vertical, 9 up
+                    </item>
+                </string-array>
+            </file>
+            <file
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/color.xml"
+                qualifiers="" >
+                <color name="grey" >#ff999999
+                </color>
+                <color name="light_green" >#ff99ff99
+                </color>
+                <color name="blue" >#ff0000ff
+                </color>
+                <color name="white" >#ffffffff
+                </color>
+                <color name="black" >#ff000000
+                </color>
+                <color name="light_yellow" >#ffffff99
+                </color>
+                <color name="light_blue" >#ff9999ff
+                </color>
+            </file>
+            <file
+                name="main"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/main.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="log_dialog"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/log_dialog.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="addwatch"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/addwatch.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="result"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/result.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="editwatch"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/editwatch.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="watchcheck"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/watchcheck.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="result_row"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/result_row.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="selectwatch"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/selectwatch.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="watch_row"
+                path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/watch_row.xml"
+                qualifiers=""
+                type="layout" />
+        </source>
+        <source path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/build/res/rs/debug" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/debug/res" />
+    </dataSet>
+
+</merger>

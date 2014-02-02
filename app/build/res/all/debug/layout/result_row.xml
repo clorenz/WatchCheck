@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+    <TableLayout android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" 
+    			android:id="@+id/tableLayoutResultRow"> 
+
+    	<TableRow android:id="@+id/tableRowResult" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        	<TextView android:layout_marginLeft="10dp" android:layout_height="wrap_content" android:id="@+id/textViewResultTimestamp" android:layout_width="fill_parent" android:gravity="left" android:layout_gravity="left" android:text="@string/zero"></TextView>
+        	<TextView android:layout_marginLeft="10dp" android:layout_height="wrap_content" android:id="@+id/textViewResultOffset" android:layout_width="fill_parent" android:gravity="left" android:layout_gravity="left"></TextView>
+        	<TextView android:layout_marginLeft="10dp" android:layout_height="wrap_content" android:id="@+id/textViewResultDailyDeviation" android:layout_width="fill_parent" android:gravity="left" android:layout_gravity="left"></TextView>
+        </TableRow>
+   </TableLayout>
+</LinearLayout><!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/result_row.xml -->

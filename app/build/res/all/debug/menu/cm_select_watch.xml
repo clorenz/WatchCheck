@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/selectWatchEdit"
+	android:title="@string/edit" />
+  <item android:id="@+id/selectWatchDelete"
+  	android:title="@string/delete" />
+</menu>
+<!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/menu/cm_select_watch.xml -->

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    <TextView android:id="@+id/selectWatch" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content" android:text="@string/selectWatch"></TextView>
+    <ListView android:id="@+id/selectWatchListView" android:layout_height="wrap_content" android:layout_width="fill_parent"></ListView>
+    
+</LinearLayout>
+<!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/layout/selectwatch.xml -->

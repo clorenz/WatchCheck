@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/arrays.xml -->
+    <eat-comment />
+
+    <string-array name="positions">
+        <item>worn</item>
+        <item>horizontal, dial up</item>
+        <item>horizontal, dial down</item>
+        <item>vertical, 12 up</item>
+        <item>vertical, 3 up</item>
+        <item>vertical, 6 up</item>
+        <item>vertical, 9 up</item>
+    </string-array>
+    <string-array name="temperatures">
+        <item>skin</item>
+        <item>+4°</item>
+        <item>+20°</item>
+        <item>+36°</item>
+    </string-array>
+    <!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/color.xml -->
+    <eat-comment />
+
+    <color name="black">#ff000000</color>
+    <color name="blue">#ff0000ff</color>
+    <color name="grey">#ff999999</color>
+    <color name="light_blue">#ff9999ff</color>
+    <color name="light_green">#ff99ff99</color>
+    <color name="light_yellow">#ffffff99</color>
+    <color name="white">#ffffffff</color>
+    <!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/res/values/strings.xml -->
+    <eat-comment />
+
+    <string name="OK">OK</string>
+    <string name="about">About</string>
+    <string name="addWatch">add watch</string>
+    <string name="addWatchModel">Model: </string>
+    <string name="addWatchRemarks">Remarks: </string>
+    <string name="addWatchSerial">Serial: </string>
+    <string name="app_about">(C) 2011 by Christoph Lorenz, www.uhrenbastler.de.\nAll rights reserved, no warranty at all!\nUse at your own risk!</string>
+    <string name="app_name">WatchCheck</string>
+    <string name="averageResult">Average deviation: %1$s s/day</string>
+    <string name="buttnLog">Log</string>
+    <string name="buttonCheckTimeLocal">Measure (local precision)</string>
+    <string name="buttonCheckTimeNtp">Measure (NTP precision)</string>
+    <string name="cancel">Cancel</string>
+    <string name="checkWatch">Check watch</string>
+    <string name="comment">Comment: </string>
+    <string name="currentDeviation">Current deviation: </string>
+    <string name="dataExported">Data exported</string>
+    <string name="delete">Delete</string>
+    <string name="deleteWatch">Are you sure, you want to delete %s and all of its logs?</string>
+    <string name="deviation">Deviation: </string>
+    <string name="edit">Edit</string>
+    <string name="enterLog">Enter Log Data</string>
+    <string name="exportData">Export data</string>
+    <string name="headerResultDailyDeviation">Deviation</string>
+    <string name="headerResultOffset">Offset</string>
+    <string name="headerResultTimestamp">Timestamp</string>
+    <string name="headlineAddWatch">Add watch</string>
+    <string name="headlineEditWatch">Edit watch</string>
+    <string name="headlineLog">Log</string>
+    <string name="importData">Import data</string>
+    <string name="measure">Measure</string>
+    <string name="mode">Measure mode: </string>
+    <string name="modeLocal">Local time (not precise!)</string>
+    <string name="modeNtp">NTP (Deviation: %s sec)</string>
+    <string name="newPeriod">New measure period: </string>
+    <string name="no">No</string>
+    <string name="position">Position: </string>
+    <string name="reloadDatabase">You are about to drop all contents of the existing database and reload its contents with the data, found on the sdcard.\nAfterwards, the app is closed and must be restarted again!\nAre you sure?</string>
+    <string name="resultHeader">Period %1$d/%2$d\n(%3$s - %4$s)</string>
+    <string name="results">Results</string>
+    <string name="save">save</string>
+    <string name="selectWatch">Select watch</string>
+    <string name="temperature">Temperature: </string>
+    <string name="timeOfYourWatch">Enter the time of your watch (seconds to zero)</string>
+    <string name="warning">WARNING!</string>
+    <string name="watch">Watch to check: </string>
+    <string name="yes">Yes</string>
+    <string name="zero">+- 0 sec</string>
+
+</resources>

@@ -1,0 +1,27 @@
+<!-- From: file:/home/clorenz/AndroidStudioProjects/WatchCheck/app/src/main/AndroidManifest.xml --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="16" android:versionName="1.2" package="de.uhrenbastler.watchcheck">
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.VIBRATE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application android:icon="@drawable/watchcheck" android:label="@string/app_name">
+    
+        <activity android:label="@string/app_name" android:name="de.uhrenbastler.watchcheck.ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        
+        <activity android:label="MainMenu" android:name="de.uhrenbastler.watchcheck.MainMenu"/>
+        <activity android:name="de.uhrenbastler.watchcheck.ui.CheckWatchActivity"/>
+        <activity android:name="de.uhrenbastler.watchcheck.FinActivity"/>
+        <provider android:authorities="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider" android:name="de.uhrenbastler.watchcheck.data.WatchCheckLogContentProvider"/>
+        <activity android:name="de.uhrenbastler.watchcheck.AddWatchActivity"/>
+        <activity android:name="de.uhrenbastler.watchcheck.EditWatchActivity"/>
+        <activity android:name="de.uhrenbastler.watchcheck.SelectWatchActivity"/>
+		<activity android:name="de.uhrenbastler.watchcheck.ResultsActivity"/>
+    </application>
+    
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8"/>
+</manifest>

@@ -1,0 +1,32 @@
+- Einzelne Logs sollten editiert oder gelöscht werden können
+- CheckWatchActivity: ModeNTP könnte im Hintergrund überwacht werden
+- BACK aus Result sollte entweder eine Meldung bringen, oder auf die mittlere Action gehen!
+- Komplette Perioden sollen gelöscht werden können
+- Was passiert eigentlich, wenn man eine Uhr entfernt? Werden dann
+  (kaskadierend) auch die Logs gelöscht?
+- Anzeige der Systemzeit incl. Sekunden (vielleicht sogar mit Pieps zur
+  vollen Minute??), und evtl. auch Anzeige der NTP-Zeit.
+- bessere Anleitung
+- deutsche Übersetzung
+- Graphische Anzeige
+- Bug: Wenn eine Uhr gelöscht wird, werden die Logs dieser Uhr nicht gelöscht!
+---------------------------------------------------------------
+ich hab die app nun auch ein paar tage genutzt um einige meiner uhren zu tracken.
+in meiner situation scheint es da aber irgendwelche abweichungen zu geben die weit über dem liegen was anhand der messungenauigkeit beim ablesen/drücken bzw. der abweichung der internen handy uhr verursacht werden könnte.
+
+leg doch zum vergleich mal eine neue uhr an die du immer mit einer funkuhr oder ner seite wie time.is "testest" dann hast du einen offsetwert der eigentlich nicht mehr als 1-2s/d betragen sollte.
+
+auch wenn man in sehr kurzen abständen misst und somit durch den fehler "mensch" eine hohe abweichung für diesen messwert bekomm, sollte sich das nicht auf die gemittelte abweichung auswirken. so wie ich das bis jetzt einschätzen kann gibts da wohl einen fehler in den berechnungsformeln, wenn man zwei messwerte in einem abstand von einer minute ermittelt dann sollte sich diese abweichung eigentlich nicht auf die gemittelte abweichung auswirken, da die gewichtung aufgrund der kurzen messdauer irrelevant ist.
+
+ich hab die werte mal schnell in excel eingetippt, die in der app angegeneben mittlere abweichung wird offenbar durch einfaches arithmetisches mitteln der einzelnen abweichungen berechnet. das ist leider falsch, es müsste eine gewichtung nach messdauer stattfinden.
+
+und noch schlimmer, die erste abweichung wird als 0s/d gewertet, dh selbst wenn man immer zu einem festen zeitpunkt misst braucht man einige tage bis dieser fehler wegfällt. in der app selber wird das auch richtig dargestellt, der erste wert ist nicht vorhanden, da er ja eine abweichung zwischen zwei messwerten darstellt.
+
+da gibts wohl noch einiges zu fixen
+
+die idee ist aber nicht schlecht, an der umsetzung mangelts leider etwas.
+
+aber einem geschenktem gaul schaut man ja nicht ins maul
+
+mfg fabian 
+----------------------------------------------
